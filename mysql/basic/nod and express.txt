@@ -1,0 +1,99 @@
+1]event loop#
+main loop ,main theeread 
+handle non blocking request , process it and send resplonse to clint . it initialise when nodejs processs start
+
+thread pool# 
+worker thread, contain collection of many threasd .run along with main thread parallely.
+handle blocking request ,process it and send responnse back to clint.
+handle by libuv library
+
+2]event emitter#
+class that hold obj that can emit events
+conatin built in module called event 
+by using it we can create own event ,trigger and listen event
+
+
+
+3]app#
+const http =requre('http');
+const port =8000;
+http.createServer(function (req, res) {
+   
+    res.write("hh");
+    res.end();
+}).listen(port);
+
+console.log(`Server is running on http://localhost:${port}`);
+
+
+
+
+4]http request#
+get -retive data from server
+post- send response to server
+delete-delete resorce
+head -retive data without body
+
+5]req-res#
+request - object that hold info about  incoming http request
+response - object used to send response to client
+
+6]process.nexttick and setiimediate
+
+process.nexttick()- psotpone exceution of allback in next iteration of loop.
+but before i/o opr
+
+setiimediate- psotpone exceution of allback in next iteration of loop.
+but after i/o opr
+
+
+
+
+7]fork and spawn 
+spawn - create new preocess with given coomand
+used to stream data betn parent  and child process in real time.
+child_process.spawn(command,[,args],[,options])
+command -comd to run
+
+fork -create new instance of v8 engine 
+used to commn betn parent  and child process
+
+modulepath - path of nodejs module to run in child proeces
+
+
+8]cluster and worker thread
+cluster - create muktiple insrtance of  nodejs process
+worker thread - create mukltile thrread within single nodejs process
+
+9]bufer
+
+10]stream
+
+11]mw
+
+
+
+
+12]node env and .env
+
+
+13}body
+ccokie
+passport
+crypto
+punny
+
+14]callback hell
+
+
+
+15]callback ,async await promise
+callabakc -fn passses as arg to another fn.fn called another fn
+all treat as arg to myfn function
+function myfn(call){
+call("gg");
+}
+
+myfn(data){
+console.log('receive');
+}
