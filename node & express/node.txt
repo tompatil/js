@@ -1,0 +1,91 @@
+Node.js is an open source server environment.
+
+Node.js allows you to run JavaScript on the server.
+
+1) modules-
+modules to be the same as JavaScript libraries.set of functions
+  include a module, use the require() function 
+  
+  own module 
+  exports.myDateTime = function () {
+  return Date();
+}; sAVE AS myfirstmodule.JS
+
+var dt = require('./myfirstmodule');
+
+Node.js has a built-in module called HTTP, which allows Node.js to transfer data over the Hyper Text Transfer Protocol (HTTP).
+
+
+
+2)create an HTTP server:
+Use the createServer() method to create an HTTP server:
+var http = require('http');
+
+//create a server object:
+http.createServer(function (req, res) {
+  res.write('Hello World!'); //write a response to the client
+  res.end(); //end the response
+}).listen(8080); //the server object listens on port 8080
+
+3)The URL module
+ splits up a web address into readable parts.
+var url = require('url');
+var adr = 'http://localhost:8080/default.htm?year=2017&month=february';
+var q = url.parse(adr, true);
+
+console.log(q.host); //returns 'localhost:8080'
+console.log(q.pathname); //returns '/default.htm'
+console.log(q.search); //returns '?year=2017&month=february'
+
+var qdata = q.query; //returns an object: { year: 2017, month: 'february' }
+console.log(qdata.month); //returns 'february'
+
+
+4)npm
+A package in Node.js contains all the files you need for a module.
+
+Modules are JavaScript libraries you can include in your project.
+
+5)
+package.json
+in Node.js is a metadata file that contains project-specific information such as dependencies, scripts, version, author details, and other configuration settingsrequired for managing and building the project.
+‘npm init -y’ for default initialization
+
+
+npm init
+6)REPL,cluster,)REPL buffer Streams  Timers body parser cookie parser cors
+
+
+7)most used framework
+Express.js as it is highly scalable, efficient, and requires very few lines of code to create an application
+ provides broad features for building web and mobile applications
+ 
+8)routes =endpoint
+
+For APIs, an endpoint can include a URL of a server or service.
+
+
+8Timers
+
+The setImmediate function is used to execute a particular script immediately whereas the setTimeout function is used to hold a function and execute it after a specifiedperiod of time.
+
+
+9) spawn fork
+Both these methods are used to create new child processes the only difference between them is that 
+spawn() method creates a new function that Node runs from the command line whereas
+ fork() function creates an instance of the existing fork() method and creates multiple workers to perform on the same task.
+
+
+10)passport module
+The passport module is used for adding authentication features to our website or web app. It implements authentication measure which helps to perform sign-in operations.
+
+
+11)tls module in Node.js?
+The tls module provides an implementation of the Transport Layer Security (TLS) and Secure Socket Layer (SSL) protocols that are built on top of OpenSSL. It helps toestablish a secure connection on the network.
+
+12)parsing
+parsing means to analyze or break up something )
+
+cokie=Cookies are data, stored in small text files, on your computer.
+When a user visits a web page, his/her name can be stored in a cookie.
+Next time the user visits the page, the cookie "remembers" his/her name.
