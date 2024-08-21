@@ -1,0 +1,66 @@
+Here are some commonly used regex characters and their meanings:
+
+^: Anchors the regex at the beginning of the string.
+$: Anchors the regex at the end of the string.
+.: Matches any single character.
+*: Matches 0 or more occurrences of the preceding element.
++: Matches 1 or more occurrences of the preceding element.
+?: Matches 0 or 1 occurrence of the preceding element.
+[]: Defines a character class; matches any one of the characters inside the brackets.
+|: Acts like a logical OR, allowing you to match either the pattern on the left or the pattern on the right.
+
+
+examples:
+1)WHERE product_name REGEXP '^A'; 
+-- Matches products starting with 'A'
+
+2)WHERE username REGEXP 'ing$'; 
+-- Matches usernames ending with 'ing'
+
+3)WHERE book_title REGEXP '[0-9]';
+ -- Matches book titles containing any digit
+ 
+4)WHERE email REGEXP '.*@.*\.com'; 
+-- Matches emails with the domain '.com'
+
+5)WHERE product_name REGEXP 'Apple|Orange';
+ -- Matches products with 'Apple' or 'Orange' in the name
+ 
+6)WHERE sentence REGEXP 'word\\d';
+-- Matches sentences containing 'word' followed by a digit
+ 
+7)WHERE city REGEXP BINARY 'New|Los'; 
+-- Matches cities with 'New' or 'Los' in a case-sensitive manner
+
+
+8)for alpha and number:
+ SELECT * FROM `emp` WHERE  city  REGEXP '[0-9][a-z]';
+ or
+ SELECT *FROM Employee WHERE   fname REGEXP '[a-zA-Z0-9]'
+ 
+9)fetch values: p3,p4333
+  SELECT * FROM `emp` WHERE  city  REGEXP '[p]+[0-9]';  
+
+10)fetch value start with p ex-: party1,partnew1
+SELECT * FROM `emp` WHERE  city  REGEXP '^p[a-z]+[0-9]'
+
+11)number and multiple spl char  ex: 999#-
+ SELECT *FROM emp WHERE city REGEXP '[0-9]' AND city REGEXP '[#]+[-]'; 
+ 
+12) alpha and multiple spl char ex: Ad#-
+SELECT *FROM emp WHERE city REGEXP '[a-z]' AND city REGEXP '[#]+[-]'; 
+
+13)alpha and numeric and multiple spl char	
+SELECT *FROM Employee WHERE   fname REGEXP '[a-zA-Z0-9]' AND fname REGEXP '[$]+[%]';	
+ SELECT *FROM emp WHERE city  REGEXP '[0-9]'  AND city REGEXP '[a-zA-Z]' AND city REGEXP '[#]+[-]'; 
+			   
+				   
+8)fetch volno column order - first alpha then numeric
+SELECT *
+FROM DOCDEF
+ORDER BY 
+  CASE
+    WHEN volno REGEXP '^[a-zA-Z]' THEN 0 
+    ELSE 1  
+  END,
+  volno;
