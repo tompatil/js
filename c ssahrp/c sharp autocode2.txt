@@ -1,0 +1,77 @@
+using System;
+using System.CodeDom.Compiler;
+using System.Windows.Forms;
+//dotnet add package Microsoft.CodeAnalysis.CSharp(install it in nuget packge console)
+//Install-Package Microsoft.CodeAnalysis.CSharp.Scripting(install it in nuget packge console)
+namespace test_csharp
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int x = 1;
+            int y = 1;
+            string txt = "if (x == y) { MessageBox.Show(\"right\"); } else { MessageBox.Show(\"wrong\"); }";
+
+            var csharpCodeProvider = new Microsoft.CSharp.CSharpCodeProvider();
+            var parameters = new CompilerParameters
+            {
+                GenerateInMemory = true,
+                TreatWarningsAsErrors = false,
+                GenerateExecutable = false
+            };
+
+            // Add the necessary assembly references
+            parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add("System.Windows.Forms.dll");
+
+            string code = @"
+using System;
+using System.Windows.Forms;
+
+public class RuntimeExecutor
+{
+    public void Execute(int x, int y)
+    {
+        " + txt + @"
+    }
+}";
+
+            CompilerResults results = csharpCodeProvider.CompileAssemblyFromSource(parameters, code);
+
+            if (results.Errors.Count > 0)
+            {
+                // Handle compilation errors
+                string errorMessages = string.Join(Environment.NewLine, results.Errors);
+                MessageBox.Show("Compilation error: " + errorMessages);
+            }
+            else
+            {
+                try
+                {
+                    var assembly = results.CompiledAssembly;
+                    var type = assembly.GetType("RuntimeExecutor");
+                    var obj = Activator.CreateInstance(type);
+                    var method = type.GetMethod("Execute");
+
+                    // Execute the method with parameters
+                    method.Invoke(obj, new object[] { x, y });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Runtime error: " + ex.Message);
+                }
+            }
+        }
+    }
+}
