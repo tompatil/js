@@ -1,0 +1,76 @@
+using System;
+using System.Linq;
+using System.Windows.Forms;
+
+public class MainForm : Form
+{
+    private ListBox listBoxInputs;
+    private ListBox listBoxConditions;
+    private Button checkButton;
+
+    public MainForm()
+    {
+        // Initialize UI components
+        listBoxInputs = new ListBox { Left = 10, Top = 10, Width = 150, Height = 100 };
+        listBoxConditions = new ListBox { Left = 200, Top = 10, Width = 150, Height = 100 };
+        checkButton = new Button { Text = "Check", Left = 10, Top = 120, Width = 150 };
+
+        // Add components to the form
+        Controls.Add(listBoxInputs);
+        Controls.Add(listBoxConditions);
+        Controls.Add(checkButton);
+
+        // Add sample data to ListBoxes
+        listBoxInputs.Items.AddRange(new object[] { "2", "3", "4" });
+        listBoxConditions.Items.AddRange(new object[] { "1", "2", "3" });
+
+        // Attach event handler
+        checkButton.Click += CheckButton_Click;
+    }
+
+    private void CheckButton_Click(object sender, EventArgs e)
+    {
+        // Get inputs and conditions from ListBoxes
+        var inputValues = listBoxInputs.Items.Cast<string>().ToArray();
+        var conditionValues = listBoxConditions.Items.Cast<string>().Select(v => int.Parse(v)).ToArray();
+
+        // Convert input values to integers
+        int[] intInputs;
+        try
+        {
+            intInputs = inputValues.Select(v => int.Parse(v)).ToArray();
+        }
+        catch (FormatException)
+        {
+            MessageBox.Show("Invalid input. Please ensure all input values are integers.");
+            return;
+        }
+
+        // Check conditions
+        bool conditionMet = false;
+        string conditionMessage = "Conditions met for: ";
+
+        if (intInputs.Length == conditionValues.Length)
+        {
+            // Example condition: All input values match the conditions
+            conditionMet = intInputs.SequenceEqual(conditionValues);
+            if (conditionMet)
+            {
+                conditionMessage = "All input values match the conditions.";
+            }
+        }
+        else
+        {
+            conditionMessage = "The number of input values does not match the number of conditions.";
+        }
+
+        // Display the result
+        MessageBox.Show(conditionMessage);
+    }
+
+    [STAThread]
+    public static void Main()
+    {
+        Application.Run(new MainForm());
+    }
+}
