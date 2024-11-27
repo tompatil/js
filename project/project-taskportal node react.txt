@@ -1,0 +1,186 @@
+To build a task portal using Node.js and React, you'll need both a backend (Node.js) for handling API requests and a frontend (React) for the user interface. Here's a basic outline of how you can implement it:
+
+### 1. Backend (Node.js with Express)
+Set up an Express server to handle task-related operations (Add, Assign, and Delete). You can use a database like MongoDB or MySQL to store the tasks.
+
+#### **Steps:**
+1. **Initialize Node.js Project:**
+
+   mkdir task-portal
+   cd task-portal
+   npm init -y
+   npm install express mongoose cors body-parser
+   ```
+
+2. **Create the Express server:**
+   Create a `server.js` file for your Express server.
+
+   const express = require('express');
+   const mongoose = require('mongoose');
+   const cors = require('cors');
+   const bodyParser = require('body-parser');
+
+   const app = express();
+   const PORT = 5000;
+
+   // Middleware
+   app.use(cors());
+   app.use(bodyParser.json());
+
+   // MongoDB Connection
+   mongoose.connect('mongodb://localhost:27017/taskdb', { useNewUrlParser: true, useUnifiedTopology: true });
+
+   // Task Schema
+   const TaskSchema = new mongoose.Schema({
+       title: String,
+       description: String,
+       assignedTo: String,
+       completed: Boolean
+   });
+
+   const Task = mongoose.model('Task', TaskSchema);
+
+   // Routes
+
+   // Add Task
+   app.post('/tasks', async (req, res) => {
+       const { title, description, assignedTo } = req.body;
+       const task = new Task({ title, description, assignedTo, completed: false });
+       await task.save();
+       res.json(task);
+   });
+
+   // Assign Task
+   app.put('/tasks/:id/assign', async (req, res) => {
+       const { assignedTo } = req.body;
+       const task = await Task.findByIdAndUpdate(req.params.id, { assignedTo }, { new: true });
+       res.json(task);
+   });
+
+   // Delete Task
+   app.delete('/tasks/:id', async (req, res) => {
+       await Task.findByIdAndDelete(req.params.id);
+       res.json({ message: 'Task deleted' });
+   });
+
+   // Get All Tasks
+   app.get('/tasks', async (req, res) => {
+       const tasks = await Task.find();
+       res.json(tasks);
+   });
+
+   app.listen(PORT, () => {
+       console.log(`Server is running on port ${PORT}`);
+   });
+   ```
+
+### 2. Frontend (React)
+Create a React app to interact with the backend API for task management.
+
+#### **Steps:**
+1. **Initialize React Project:**
+
+   npx create-react-app task-portal-client
+   cd task-portal-client
+   npm install axios
+   ```
+
+2. **Create Task Management Components:**
+   In your `src` folder, create a `TaskManager.js` component to handle adding, assigning, and deleting tasks.
+
+
+   import React, { useState, useEffect } from 'react';
+   import axios from 'axios';
+
+   const TaskManager = () => {
+       const [tasks, setTasks] = useState([]);
+       const [newTask, setNewTask] = useState({ title: '', description: '', assignedTo: '' });
+
+       useEffect(() => {
+           fetchTasks();
+       }, []);
+
+       const fetchTasks = async () => {
+           const res = await axios.get('http://localhost:5000/tasks');
+           setTasks(res.data);
+       };
+
+       const addTask = async () => {
+           const res = await axios.post('http://localhost:5000/tasks', newTask);
+           setTasks([...tasks, res.data]);
+           setNewTask({ title: '', description: '', assignedTo: '' });
+       };
+
+       const deleteTask = async (id) => {
+           await axios.delete(`http://localhost:5000/tasks/${id}`);
+           setTasks(tasks.filter(task => task._id !== id));
+       };
+
+       const assignTask = async (id, assignedTo) => {
+           const res = await axios.put(`http://localhost:5000/tasks/${id}/assign`, { assignedTo });
+           setTasks(tasks.map(task => (task._id === id ? res.data : task)));
+       };
+
+       return (
+           <div>
+               <h1>Task Manager</h1>
+               <input
+                   type="text"
+                   placeholder="Task Title"
+                   value={newTask.title}
+                   onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+               />
+               <input
+                   type="text"
+                   placeholder="Task Description"
+                   value={newTask.description}
+                   onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+               />
+               <input
+                   type="text"
+                   placeholder="Assign To"
+                   value={newTask.assignedTo}
+                   onChange={(e) => setNewTask({ ...newTask, assignedTo: e.target.value })}
+               />
+               <button onClick={addTask}>Add Task</button>
+
+               <h2>Task List</h2>
+               <ul>
+                   {tasks.map(task => (
+                       <li key={task._id}>
+                           <h3>{task.title}</h3>
+                           <p>{task.description}</p>
+                           <p>Assigned to: {task.assignedTo || 'Not Assigned'}</p>
+                           <input
+                               type="text"
+                               placeholder="Assign To"
+                               onChange={(e) => assignTask(task._id, e.target.value)}
+                           />
+                           <button onClick={() => deleteTask(task._id)}>Delete</button>
+                       </li>
+                   ))}
+               </ul>
+           </div>
+       );
+   };
+
+   export default TaskManager;
+   ```
+
+### 3. Running the Application
+- **Start the backend server:**
+
+  node server.js
+
+- **Start the frontend React app:**
+
+  npm start
+
+
+### Features Implemented:
+1. **Add Task:** Users can add tasks by providing a title, description, and assignment.
+2. **Assign Task:** Users can assign tasks by updating the assigned person.
+3. **Delete Task:** Users can delete tasks from the list.
+4. **Task List:** All tasks are fetched and displayed in a list with options to modify them.
+
+This is a basic setup for managing tasks. You can expand on this by adding more features like task completion status, due dates, etc.
