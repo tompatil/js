@@ -1,0 +1,284 @@
+Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. 
+Middleware is a request handler .
+Middleware gets executed after the server receives the request and  send the response. 
+
+Middleware functions can perform the following tasks:
+Middleware can process request objects multiple times before the server works for that request.
+Middleware can be used to add logging and authentication functionality.
+Middleware improves client-side rendering performance.
+Make changes to the request and the response objects.
+End the request-response cycle.
+
+
+Middleware Syntax
+The basic syntax for the middleware functions is:
+
+app.get(path, (req, res, next) => {}, (req, res) => {})	
+ 
+type:
+Application-level middleware
+Bind application-level middleware to an instance of the app object by using the app.use() and app.METHOD() functions, where METHOD is the HTTP method of the request that the middleware function handles (such as GET, PUT, or POST) in lowercase.
+
+This example shows a middleware function with no mount path. The function is executed every time the app receives a request.
+
+const express = require('express')
+const app = express()
+
+app.use((req, res, next) => {
+  console.log('Time:', Date.now())
+  next()
+})
+This example shows a middleware function mounted on the /user/:id path. The function is executed for any type of HTTP request on the /user/:id path.
+
+app.use('/user/:id', (req, res, next) => {
+  console.log('Request Type:', req.method)
+  next()
+})
+This example shows a route and its handler function (middleware system). The function handles GET requests to the /user/:id path.
+
+app.get('/user/:id', (req, res, next) => {
+  res.send('USER')
+})
+Here is an example of loading a series of middleware functions at a mount point, with a mount path. It illustrates a middleware sub-stack that prints request info for any type of HTTP request to the /user/:id path.
+
+app.use('/user/:id', (req, res, next) => {
+  console.log('Request URL:', req.originalUrl)
+  next()
+}, (req, res, next) => {
+  console.log('Request Type:', req.method)
+  next()
+})
+
+Route handlers enable you to define multiple routes for a path. The example below defines two routes for GET requests to the /user/:id path. The second route will not cause any problems, but it will never get called because the first route ends the request-response cycle.
+
+This example shows a middleware sub-stack that handles GET requests to the /user/:id path.
+
+app.get('/user/:id', (req, res, next) => {
+  console.log('ID:', req.params.id)
+  next()
+}, (req, res, next) => {
+  res.send('User Info')
+})
+
+// handler for the /user/:id path, which prints the user ID
+app.get('/user/:id', (req, res, next) => {
+  res.send(req.params.id)
+})
+To skip the rest of the middleware functions from a router middleware stack, call next('route') to pass control to the next route. NOTE: next('route') will work only in middleware functions that were loaded by using the app.METHOD() or router.METHOD() functions.
+
+This example shows a middleware sub-stack that handles GET requests to the /user/:id path.
+
+app.get('/user/:id', (req, res, next) => {
+  // if the user ID is 0, skip to the next route
+  if (req.params.id === '0') next('route')
+  // otherwise pass the control to the next middleware function in this stack
+  else next()
+}, (req, res, next) => {
+  // send a regular response
+  res.send('regular')
+})
+
+// handler for the /user/:id path, which sends a special response
+app.get('/user/:id', (req, res, next) => {
+  res.send('special')
+})
+Middleware can also be declared in an array for reusability.
+
+This example shows an array with a middleware sub-stack that handles GET requests to the /user/:id path
+
+function logOriginalUrl (req, res, next) {
+  console.log('Request URL:', req.originalUrl)
+  next()
+}
+
+function logMethod (req, res, next) {
+  console.log('Request Type:', req.method)
+  next()
+}
+
+const logStuff = [logOriginalUrl, logMethod]
+app.get('/user/:id', logStuff, (req, res, next) => {
+  res.send('User Info')
+})
+Router-level middleware
+
+
+Router-level middleware works in the same way as application-level middleware, except it is bound to an instance of express.Router().
+
+const router = express.Router()
+Load router-level middleware by using the router.use() and router.METHOD() functions.
+
+The following example code replicates the middleware system that is shown above for application-level middleware, by using router-level middleware:
+
+const express = require('express')
+const app = express()
+const router = express.Router()
+
+// a middleware function with no mount path. This code is executed for every request to the router
+router.use((req, res, next) => {
+  console.log('Time:', Date.now())
+  next()
+})
+
+// a middleware sub-stack shows request info for any type of HTTP request to the /user/:id path
+router.use('/user/:id', (req, res, next) => {
+  console.log('Request URL:', req.originalUrl)
+  next()
+}, (req, res, next) => {
+  console.log('Request Type:', req.method)
+  next()
+})
+
+// a middleware sub-stack that handles GET requests to the /user/:id path
+router.get('/user/:id', (req, res, next) => {
+  // if the user ID is 0, skip to the next router
+  if (req.params.id === '0') next('route')
+  // otherwise pass control to the next middleware function in this stack
+  else next()
+}, (req, res, next) => {
+  // render a regular page
+  res.render('regular')
+})
+
+// handler for the /user/:id path, which renders a special page
+router.get('/user/:id', (req, res, next) => {
+  console.log(req.params.id)
+  res.render('special')
+})
+
+// mount the router on the app
+app.use('/', router)
+To skip the rest of the router’s middleware functions, call next('router') to pass control back out of the router instance.
+
+This example shows a middleware sub-stack that handles GET requests to the /user/:id path.
+
+const express = require('express')
+const app = express()
+const router = express.Router()
+
+// predicate the router with a check and bail out when needed
+router.use((req, res, next) => {
+  if (!req.headers['x-auth']) return next('router')
+  next()
+})
+
+router.get('/user/:id', (req, res) => {
+  res.send('hello, user!')
+})
+
+// use the router and 401 anything falling through
+app.use('/admin', router, (req, res) => {
+  res.sendStatus(401)
+})
+Error-handling middleware
+
+
+
+
+Error-handling middleware always takes four arguments. You must provide four arguments to identify it as an error-handling middleware function. Even if you don’t need to use the next object, you must specify it to maintain the signature. Otherwise, the next object will be interpreted as regular middleware and will fail to handle errors.
+
+Define error-handling middleware functions in the same way as other middleware functions, except with four arguments instead of three, specifically with the signature (err, req, res, next):
+
+app.use((err, req, res, next) => {
+  console.error(err.stack)
+  res.status(500).send('Something broke!')
+})
+For details about error-handling middleware, see: Error handling.
+
+Built-in middleware
+Starting with version 4.x, Express no longer depends on Connect. The middleware functions that were previously included with Express are now in separate modules; see the list of middleware functions.
+
+Express has the following built-in middleware functions:
+
+
+
+
+_________________________
+new
+
+// Middleware function
+app.use((req, res, next) => {
+    console.log('Request URL:', req.url); // Logs the requested URL
+    next(); // Pass control to the next middleware or route handler
+});
+
+
+
+In Node.js, middleware refers to functions that execute during the request-response lifecycle. Middleware functions have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. 
+
+Types of Middleware in Node.js
+Application-level Middleware
+Defined at the application level and used across the application or for specific routes.
+
+javascript
+Copy code
+const express = require('express');
+const app = express();
+
+app.use((req, res, next) => {
+    console.log('Request URL:', req.url);
+    next(); // Pass control to the next middleware
+});
+
+app.get('/', (req, res) => {
+    res.send('Hello, World!');
+});
+
+app.listen(3000);
+Router-level Middleware
+Similar to application-level middleware but applied to specific routers.
+
+javascript
+Copy code
+const express = require('express');
+const app = express();
+const router = express.Router();
+
+router.use((req, res, next) => {
+    console.log('Router-level middleware');
+    next();
+});
+
+router.get('/user', (req, res) => {
+    res.send('User route');
+});
+
+app.use(router);
+
+app.listen(3000);
+Built-in Middleware
+Middleware provided by Express for common functionalities.
+
+app.use(express.json()); Parses JSON request bodies.
+
+app.use(express.urlencoded({ extended: true })); Parses URL-encoded bodies.(typically form data/POST requests).
+  - `extended`: If set to `false`, it uses the `querystring` library for parsing.
+  If `true`, it uses the `qs` library, allowing for richer parsing (e.g., nested objects) 
+
+app.use(express.static('public')); Serves static files. as HTML files, images CSS files, and JavaScript files., and so on.  will be served directly to clients 
+
+Third-party Middleware
+Middleware provided by third-party packages for additional functionalities.
+
+Examples:
+
+body-parser: Parses request bodies.
+cors: Handles Cross-Origin Resource Sharing.
+helmet: Secures HTTP headers.
+javascript
+Copy code
+const cors = require('cors');
+app.use(cors());
+Error-handling Middleware
+Middleware specifically for handling errors. It has four arguments: (err, req, res, next).
+
+javascript
+Copy code
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something went wrong!');
+});
+Middleware Flow
+Middleware functions are executed in the order they are defined.
+Use next() to pass control to the next middleware.
+If next() i

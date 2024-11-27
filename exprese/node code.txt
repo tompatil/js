@@ -1,0 +1,143 @@
+Here's a line-by-line explanation of the code:
+
+```javascript
+const express = require('express')
+```
+- Import the Express framework, which simplifies handling HTTP requests and responses.
+
+```javascript
+const bodyParser = require('body-parser')
+```
+- Import the `body-parser` middleware, used to parse incoming request bodies (e.g., from forms or JSON data).
+
+```javascript
+const books = [
+    {
+        bookName: "Rudest Book Ever",
+        bookAuthor: "Shwetabh Gangwar",
+        bookPages: 200,
+        bookPrice: 240,
+        bookState: "Available"
+    },
+    {
+        bookName: "Do Epic Shit",
+        bookAuthor: "Ankur Wariko",
+        bookPages: 200,
+        bookPrice: 240,
+        bookState: "Available"
+    }
+]
+```
+- Initialize an array of book objects, each containing details like `bookName`, `bookAuthor`, `bookPages`, `bookPrice`, and `bookState`.
+
+```javascript
+const app = express()
+```
+- Create an instance of the Express application, which will be used to define routes and middleware.
+
+```javascript
+app.set('view engine', 'ejs')
+```
+- Set `ejs` (Embedded JavaScript) as the templating engine for rendering views (HTML with embedded JavaScript).
+
+```javascript
+app.use(bodyParser.json());
+```
+- Enable parsing of incoming JSON payloads in requests.
+
+```javascript
+app.use(bodyParser.urlencoded({ extended: true }))
+```
+- Enable parsing of URL-encoded payloads (typically used when sending form data via POST). The `extended: true` option allows for parsing more complex objects.
+
+### Routes
+
+```javascript
+app.get("/", function (req, res) {
+    res.render("home", {
+        data: books
+    })
+})
+```
+- Define a route to handle GET requests to the root URL (`"/"`). It renders the `home.ejs` template and passes the `books` array to the template as `data`.
+
+```javascript
+app.post("/", (req, res) => {
+    const inputBookName = req.body.bookName
+    const inputBookAuthor = req.body.bookAuthor
+    const inputBookPages = req.body.bookPages
+    const inputBookPrice = req.body.bookPrice
+
+    books.push({
+        bookName: inputBookName,
+        bookAuthor: inputBookAuthor,
+        bookPages: inputBookPages,
+        bookPrice: inputBookPrice,
+        bookState: "Available"
+    })
+
+    res.render("home", {
+        data: books
+    })
+})
+```
+- Define a route to handle POST requests to the root URL (`"/"`). It retrieves book details from the request body, adds a new book to the `books` array, and renders the `home.ejs` template with the updated `books` array.
+
+```javascript
+app.post('/issue', (req, res) => {
+    var requestedBookName = req.body.bookName;
+    books.forEach(book => {
+        if (book.bookName == requestedBookName) {
+            book.bookState = "Issued";
+        }
+    })
+    res.render("home", {
+        data: books
+    })
+})
+```
+- Handle POST requests to the `/issue` URL. It finds the book whose `bookName` matches the `requestedBookName` from the request body and changes its `bookState` to "Issued". Then, it renders the `home.ejs` template with the updated `books` array.
+
+```javascript
+app.post('/return', (req, res) => {
+    var requestedBookName = req.body.bookName;
+    books.forEach(book => {
+        if (book.bookName == requestedBookName) {
+            book.bookState = "Available";
+        }
+    })
+    res.render("home", {
+        data: books
+    })
+})
+```
+- Handle POST requests to the `/return` URL. It changes the `bookState` of the requested book to "Available" and re-renders the `home.ejs` template with the updated `books` array.
+
+```javascript
+app.post('/delete', (req, res) => {
+    var requestedBookName = req.body.bookName;
+    var j = 0;
+    books.forEach(book => {
+        j = j + 1;
+        if (book.bookName == requestedBookName) {
+            books.splice((j - 1), 1)
+        }
+    })
+    res.render("home", {
+        data: books
+    })
+})
+```
+- Handle POST requests to the `/delete` URL. It removes the book whose `bookName` matches the `requestedBookName`. The `splice` method is used to delete the element from the `books` array, and the updated array is rendered again with `home.ejs`.
+
+### Server Setup
+
+```javascript
+app.listen(3000, (req, res) => {
+    console.log("App is running on port 3000")
+})
+```
+- Start the server on port 3000 and log a message when the server is running.
+
+### Summary
+- The code is a simple book management system built using Express. It supports displaying the books, adding new books, issuing, returning, and deleting books, with the use of EJS for rendering views. The routes handle the different interactions with the book list.

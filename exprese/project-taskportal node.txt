@@ -1,0 +1,252 @@
+Here’s a complete example of a task portal with a simple frontend using HTML, Express.js, and MongoDB with Mongoose. This will allow you to add, assign, and delete tasks via a web interface.
+
+### 1. Folder Structure:
+
+task-portal/
+│
+├── models/
+│   └── Task.js
+├── public/
+│   └── index.html
+├── routes/
+│   └── taskRoutes.js
+├── views/
+│   └── tasks.ejs
+└── index.js
+
+
+### 2. `index.js` (Express.js Server)
+
+const express = require('express');
+const mongoose = require('mongoose');
+const path = require('path');
+
+const app = express();
+const PORT = 3000;
+
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/taskDB', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+
+// Middleware
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Set EJS as the view engine
+app.set('view engine', 'ejs');
+
+// Routes
+const taskRoutes = require('./routes/taskRoutes');
+app.use('/', taskRoutes);
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});
+
+
+### 3. `models/Task.js` (Mongoose Task Model)
+
+const mongoose = require('mongoose');
+
+const taskSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  assignedTo: String,
+  completed: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const Task = mongoose.model('Task', taskSchema);
+
+module.exports = Task;
+
+
+### 4. `routes/taskRoutes.js` (Task Routes)
+
+const express = require('express');
+const router = express.Router();
+const Task = require('../models/Task');
+
+// Render the task management page
+router.get('/', async (req, res) => {
+  const tasks = await Task.find();
+  res.render('tasks', { tasks });
+});
+
+// Add a new task
+router.post('/add', async (req, res) => {
+  const { title, description, assignedTo } = req.body;
+  const task = new Task({ title, description, assignedTo });
+  await task.save();
+  res.redirect('/');
+});
+
+// Delete a task
+router.post('/delete/:id', async (req, res) => {
+  await Task.findByIdAndDelete(req.params.id);
+  res.redirect('/');
+});
+
+module.exports = router;
+
+
+### 5. `views/tasks.ejs` (HTML for Task Management Page)
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Portal</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <h1>Task Portal</h1>
+
+  <!-- Task Form -->
+  <form action="/add" method="POST">
+    <input type="text" name="title" placeholder="Task Title" required>
+    <input type="text" name="description" placeholder="Task Description" required>
+    <input type="text" name="assignedTo" placeholder="Assign to" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <hr>
+
+  <!-- Task List -->
+  <h2>Task List</h2>
+  <ul>
+    <% tasks.forEach(task => { %>
+      <li>
+        <strong>Title:</strong> <%= task.title %> |
+        <strong>Description:</strong> <%= task.description %> |
+        <strong>Assigned To:</strong> <%= task.assignedTo %> |
+        <strong>Completed:</strong> <%= task.completed ? "Yes" : "No" %>
+        <form action="/delete/<%= task._id %>" method="POST" style="display: inline;">
+          <button type="submit">Delete</button>
+        </form>
+      </li>
+    <% }); %>
+  </ul>
+</body>
+</html>
+
+
+### 6. `public/styles.css` (CSS for Styling)
+css
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input, button {
+  padding: 10px;
+  margin: 5px;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+}
+
+button {
+  background-color: #f00;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+
+### 7. `public/index.html` (Optional Static HTML File for Frontend)
+If you prefer a static HTML interface without using `EJS`, you can create an `index.html` in the `public` folder and serve it as a static file using Express. Here is an example of a static version:
+
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Portal</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Task Portal</h1>
+
+  <!-- Task Form -->
+  <form id="task-form">
+    <input type="text" id="title" placeholder="Task Title" required>
+    <input type="text" id="description" placeholder="Task Description" required>
+    <input type="text" id="assignedTo" placeholder="Assign to" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <hr>
+
+  <!-- Task List -->
+  <h2>Task List</h2>
+  <ul id="task-list"></ul>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+### 8. `public/app.js` (Frontend JavaScript)
+
+document.getElementById('task-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const title = document.getElementById('title').value;
+  const description = document.getElementById('description').value;
+  const assignedTo = document.getElementById('assignedTo').value;
+
+  fetch('/add', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ title, description, assignedTo }),
+  })
+  .then(response => response.json())
+  .then(task => {
+    const taskList = document.getElementById('task-list');
+    const li = document.createElement('li');
+    li.textContent = `${task.title} - ${task.description} (Assigned to: ${task.assignedTo})`;
+    taskList.appendChild(li);
+  })
+  .catch(error => console.error('Error:', error));
+});
+
+
+### 9. Running the Project
+1. Start MongoDB using `mongod`.
+2. Run the Node.js server:
+
+    node index.js
+
+3. Access the app by going to `http://localhost:3000`.
+
+You now have a simple task portal where you can add, view, and delete tasks through the web interface.

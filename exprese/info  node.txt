@@ -1,0 +1,136 @@
+Node.js is a runtime environment that enables you to execute JavaScript code server-side, outside a web browser. Built on Google Chrome's V8 JavaScript engine, Node.js provides a powerful platform for building scalable and efficient applications, especially those that handle a lot of I/O operations.
+
+### Key Features and Working of Node.js:
+
+1. **Asynchronous, Non-blocking I/O**:
+   - Node.js operates in an asynchronous and non-blocking manner. This means that I/O operations (like reading/writing files, querying databases, or making HTTP requests) don’t stop the execution of code.
+   - It uses an event-driven model, so when one operation is pending, it can handle other tasks. This increases efficiency, making it particularly suitable for applications that require handling many simultaneous connections.
+It can handle a high volume of requests efficiently due to its non-blocking nature.
+
+2. **Single-threaded Event Loop**:
+   - Node.js runs on a single thread, using an event loop to handle requests. This thread doesn’t need to create a new thread for each request, which reduces overhead and memory usage.
+   - The event loop listens for events (such as incoming connections or completion of asynchronous operations) and dispatches them to appropriate handlers.
+   
+
+
+5. **JavaScript for Backend Development**:
+   - Node.js allows developers to use JavaScript for backend development, creating a unified language environment for both client and server code. This is advantageous for JavaScript developers familiar with frontend technologies.
+
+6. **Handling I/O Bound Tasks Efficiently**:
+   - Node.js is highly efficient for applications with many I/O operations but limited CPU-bound operations (e.g., APIs, real-time chat applications). 
+
+### How Node.js Processes a Request:
+
+1. **Receive the Request**:
+   - Node.js receives an incoming request on its single-threaded event loop.
+
+2. 
+   - If the request requires I/O operations means Non-blocking requests(like reading a file or querying a database), it is delegated to the underlying OS or a worker thread.
+   
+   - While the request is being handled asynchronously, the event loop is free to accept other incoming requests.
+   
+4. **Callback or Promise Resolution**:
+   - When the I/O operation completes, Node.js executes a callback function (or resolves a promise) associated with that request, handling the response as appropriate.
+
+5. **Send Response**:
+   - Once the callback or promise finishes processing, Node sends the response back to the client.
+
+
+
+**Pros:**
+- High performance for I/O-bound tasks
+- Large community and npm ecosystem
+- Ideal for real-time applications like chat apps or collaborative tools
+- JavaScript allows for full-stack development
+
+**Cons:**
+- Not ideal for CPU-intensive tasks (e.g., heavy computation)
+- Callback-heavy code can lead to “callback hell” (though promises and async/await have improved this)
+- Single-threaded nature means intensive CPU tasks can block the main thread, impacting performance
+
+
+
+
+____________________________________________________________________________
+
+
+Node.js handles blocking and non-blocking requests differently, leveraging its event-driven, single-threaded model to maximize efficiency for I/O operations. Let’s break down how it processes each type:
+
+### 1. Non-blocking Requests
+
+**Non-blocking requests** are typically I/O operations, like reading from a file, querying a database, or making HTTP requests. 
+
+- **Example of Non-blocking Operations**: File reads, database queries, network calls.
+
+**How Node.js Handles Non-blocking Requests**:
+
+1. **Receive the Request**: When a non-blocking request is made, Node.js immediately offloads it to the underlying system’s I/O handling capability.
+  
+2. **Delegation**: The request is handled by the OS or a separate worker thread within the system. Node.js doesn’t wait for the request to complete.
+
+3. **Event Loop Continues**: While the non-blocking operation is in progress, the Node.js event loop remains free to handle other incoming requests or tasks.
+
+4. **Callback or Promise Resolution**: Once the operation is complete, Node.js receives a signal and places a callback function (or resolves a promise) associated with that request into the event queue.
+
+5. **Process and Respond**: When the event loop reaches this callback in the queue, it processes it and sends the response back to the client.
+
+**Example**:
+```javascript
+const fs = require('fs');
+
+// Non-blocking file read
+fs.readFile('example.txt', 'utf8', (err, data) => {
+  if (err) throw err;
+  console.log(data); // This happens once the file has been read
+});
+
+console.log('This runs immediately after the readFile call');
+```
+
+In this example, the `fs.readFile` call is non-blocking. Node.js continues with the next line of code immediately, not waiting for the file to be read. When the file is done reading, the callback function is executed.
+
+### 2. Blocking Requests
+
+**Blocking requests** involve operations that hold up the execution of the code until they are complete. In Node.js, these are typically operations that run directly in the main thread (e.g., synchronous file reads or intensive CPU tasks).
+
+- **Example of Blocking Operations**: Synchronous file reads, complex calculations or loops.
+    
+**How Node.js Handles Blocking Requests**:
+
+1. **Receive the Request**: When a blocking request occurs, it executes on the main thread.
+
+2. **Execution Blocks the Event Loop**: Since Node.js runs on a single thread, a blocking request will hold up the event loop, preventing other tasks from executing until it completes.
+
+3. **Process and Respond**: Once the blocking operation completes, the event loop resumes and can process other pending requests.
+
+**Example**:
+```javascript
+const fs = require('fs');
+
+// Blocking file read
+const data = fs.readFileSync('example.txt', 'utf8');
+console.log(data); // Node.js waits until the file is read before continuing
+
+console.log('This runs only after the readFileSync call');
+```
+
+In this example, `fs.readFileSync` is a blocking call, meaning Node.js won’t proceed until it finishes reading the file. This can cause delays, especially if the file is large or the operation takes time.
+
+### Handling Blocking Code in Node.js
+
+To handle blocking operations in Node.js without freezing the event loop:
+
+1. **Use Asynchronous Functions**: Always use asynchronous versions of functions, like `fs.readFile` instead of `fs.readFileSync`, unless absolutely necessary.
+
+2. **Use Worker Threads**: For CPU-intensive tasks, consider using Node’s `worker_threads` module, which allows you to run code in parallel on multiple threads, offloading work from the main event loop.
+
+3. **Offload to External Services**: For certain tasks like heavy computation, consider offloading the work to an external service or microservice to keep the Node.js event loop responsive.
+
+### Summary
+
+- **Non-blocking requests** are handled by the OS or other threads, allowing Node.js to continue processing other requests in the event loop.
+- **Blocking requests** directly occupy the event loop and halt further execution, making them less efficient for Node’s single-threaded model.
+
+
+
+Libuv: It is responsible for all the asynchronous operations. It performs, maintains, and manages all the I/O operations and events in the event pool. All the TCP level connectivity and file/system operations are performed by this library. This library is written in C. Libuv implements an extremely important feature of Node.js which is Event Loop.
