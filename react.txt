@@ -1,0 +1,394 @@
+bebel,es6,events, condtionl, list and key, form,rputing,hook
+Component Constructor	
+es5 vs es6
+
+
+react ?
+
+
+
+
+version-
+bebel version-
+adv-
+
+
+disadv
+
+
+
+
+es6-
+
+virtual dom
+The Virtual DOM is a lightweight, non-live copy of the real DOM. It's essentially a JavaScript object that 
+represents the structure of the UI. It mirrors the actual DOM but exists only in memory and is not directly 
+rendered to the screen.
+
+How it works:
+When the state of a React component changes, React first updates the Virtual DOM, not the actual DOM. Then, 
+it compares the previous state of the Virtual DOM with the new one (this is known as reconciliation). 
+React calculates the difference (or diffing) and only
+ updates the real DOM with the minimal set of changes that are necessary. This process is often called patching.
+ 
+React only updates changed parts of the page (diffing algorithm).
+
+Initial Rendering:
+When React first renders, it creates a Virtual DOM tree. This allows React to compare the state of the DOM and 
+Virtual DOM before making updates.
+
+State Changes:
+When the state changes (e.g., user input or data fetch), React creates a new Virtual DOM tree. It then compares 
+the new tree with the previous one, calculating the minimal set of changes.
+
+Reconciliation:
+React uses an algorithm to calculate the differences (known as the diffing algorithm). 
+It identifies which parts of the Virtual DOM differ from the previous state and needs to be updated in the actual DOM.
+
+Efficient Updates:
+After the diffing process, React sends a batch of updates to the browser’s DOM, minimizing the number 
+of reflows and repaints, thus improving performance.
+
+
+1)jsx###############
+js extnesion, js xml
+ JSX allows us to write HTML elements in JavaScript and place them in the DOM without any createElement().
+const myElement = <h1>I Love JSX!</h1>;
+const myElement = React.createElement('h1', {}, 'I do not use JSX!');without jsx
+
+
+by using bebel-jsx can be read by web browser
+_______________________________________________________________________________________
+2)render HTML-#################
+
+using createRoot and render function
+
+
+The createRoot() function takes one argument, an HTML element.
+
+The purpose of the function is to define the HTML element where a React component should be displayed.
+
+
+The render() method is then called to define the React component that should be rendered.
+
+
+There is another folder in the root directory of your React project, named "public". 
+In this folder, there is an index.html file.
+
+You'll notice a single <div> in the body of this file. This is where our React application will be rendered.
+<body>
+  <div id="root"></div>
+</body>
+ex:
+const myElement = <h1>I Love JSX!</h1>;
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(myElement);
+_______________________________________________________________________________________
+3)React Components#############
+reusable bits of code. They serve the same purpose as JavaScript functions, but  return HTML.
+type-class ,fn
+
+Class Component
+A class 
+ must include the extends React.Component statement. 
+ This statement creates an inheritance to React.Component, and gives your component access to 
+ React.Component's functions.
+ render stmnt-return html.
+ 
+ class Car extends React.Component {
+  render() {
+    return <h2>Hi, I am a Car!</h2>;
+  }
+}
+
+A Function component 
+also returns HTML, and behaves much the same way as a Class component, 
+but Function components can be written using much less code,  easier to understand
+fn component can also track state of react cmpoent by using hook,no need to use class componnt.
+
+function Car() {
+  return <h2>Hi, I am a Car!</h2>;
+}
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Car />);
+
+_______________________________________________________________________________________
+4)Props############
+Components can be passed as props, which stands for properties.
+
+Props are like function arguments, and you send them into the component as attributes.
+
+function Car(props) {
+  return <h2>I am a {props.color} Car!</h2>;
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Car color="red"/>);
+output -I am a red Car!
+
+esx
+Send the "brand" property from the Garage component to the Car component:
+function Car(props) {
+  return <h2>I am a { props.brand }!</h2>;
+}
+
+function Garage() {
+  return (
+    <>
+      <Car brand="Ford" />
+    </>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));  g=
+root.render(<Garage />);
+_______________________________________________________________________________________
+5)export##########
+//create file Car.js:
+function Car() {
+  return <h2>Hi, I am a Car!</h2>;
+}
+
+export default Car;
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import Car from './Car.js';
+
+_______________________________________________________________________________________
+
+6)constructir####
+The constructor function is also where you honor the inheritance of the parent component by including the super() statement, 
+which executes the parent component's constructor function, and your component has access to all the functions of the parent component (React.Component).
+_______________________________________________________________________________________
+
+7)React Class Component "State"######
+React Class components have a built-in state object.
+component properties  value kept in  state object.
+When the state object changes, the component re-renders.
+Refer to the state object anywhere in the component by using the this.state.propertyname syntax:
+To change a value in the state object, use the this.setState() method.
+
+When a value in the state object changes, the component will re-render,
+ meaning that the output will change according to the new value(s).
+ setstate - change state object
+ _______________________________________________________________________________________
+ 8)events############
+ 
+ React can perform actions based on user events.
+
+React has the same events as HTML: click, change, mouseover 	
+onClick={shoot}  instead of onclick="shoot()".
+function Football() {
+  const shoot = () => {
+    alert("Great Shot!");
+  }
+
+  return (
+    <button onClick={shoot}>Take the shot!</button>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Football />);
+passing args-
+function Football() {
+  const shoot = (a) => {
+    alert(a);
+  }
+
+  return (
+    <button onClick={() => shoot("Goal!")}>Take the shot!</button>
+  );
+}
+_______________________________________________________________________________________
+9)list n keys=
+In React, you will render lists with some type of loop.
+
+The JavaScript map() array method is generally the preferred method.
+function Car(props) {
+  return <li>I am a { props.brand }</li>;
+}
+_______________________________________________________________________________________
+10)keys
+Keys allow React to keep track of elements. This way, if an item is updated or removed, only that item will be re-rendered instead of the entire list.
+
+Keys need to be unique to each sibling. But they can be duplicated globally.
+he key should be a unique ID assigned to each item.
+
+function Garage() {
+  const cars = [
+    {id: 1, brand: 'Ford'},
+    {id: 2, brand: 'BMW'},
+    {id: 3, brand: 'Audi'}
+  ];
+  return (
+    <>
+      <ul>
+        {cars.map((car) => <Car key={car.id} brand={car.brand} />)}
+      </ul>
+    </>
+  );
+}
+_______________________________________________________________________________________
+11)forms
+function MyForm() {
+  return (
+    <form>
+      <label>Enter your name:
+        <input type="text" />
+      </label>
+    </form>
+  )
+}
+In HTML, form data is usually handled by the DOM.
+
+In React, form data is usually handled by the components.
+
+When the data is handled by the components, all the data is stored in the component state.
+
+You can control changes by adding event handlers in the onChange attribute.
+
+We can use the useState Hook to keep track of each inputs value and provide a "single source of truth" for the entire application.
+
+Use the useState Hook to manage the input:
+Submitting Forms
+You can control the submit action by adding an event handler in the onSubmit attribute for the <form>:
+
+Example:
+Add a submit button and an event handler in the onSubmit attribute:
+
+import { useState } from 'react';
+import ReactDOM from 'react-dom/client';
+
+function MyForm() {
+  const [name, setName] = useState("");
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(`The name you entered was: ${name}`)
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>Enter your name:
+        <input 
+          type="text" 
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </label>
+      <input type="submit" />
+    </form>
+  )
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<MyForm />);+
+_______________________________________________________________________________________
+10)memo#############
+Using memo will cause React to skip rendering a component if its props have not changed.
+
+_______________________________________________________________________________________
+
+11)hook################
+Hooks allow function components to have access to state and other React features. 
+Because of this, class components are generally no longer needed.
+Because of this, class components are generally no longer needed.
+rules 
+Hooks can only be called inside React function components.
+Hooks can only be called at the top level of a component.
+Hooks cannot be conditional
+Hooks will not work in React class components.
+You must import Hooks from react.
+State generally refers to application data or properties that need to be tracked.
+
+usestarte:######
+We initialize our state by calling useState in our function component.
+
+useState accepts an initial state and returns two values:
+
+The current state.
+A function that updates the state.
+
+useState Hook allows us to track state in a function component.
+
+import React, { useState } from "react"; //import the useState Hook.
+import ReactDOM from "react-dom/client";
+
+function FavoriteColor() {
+  const [color, setColor] = useState("red"); //Initialize state at the top of the function component.
+
+  return (
+    <>
+      <h1>My favorite color is {color}!</h1>
+      <button
+        type="button"
+        onClick={() => setColor("blue")}//To update our state .(color = "blue" is not allowed.)
+      >Blue</button>
+
+________________	  
+const [color, setColor] = useState("red")"-	  
+first value, color, is our current state.
+
+The second value, setColor, is the function that is used to update our state.
+
+The useState Hook can be used to keep track of strings, numbers, booleans, arrays, objects, and any combination of these!
+
+
+Updating Objects and Arrays in State	
+If we only called setCar({color: "blue"}), this would remove the brand, model, and year from our state.
+
+We can use the JavaScript spread operator to help us.
+
+function Car() {
+  const [car, setCar] = useState({
+    brand: "Ford",
+    model: "Mustang",
+    year: "1964",
+    color: "red"
+  });
+
+  const updateColor = () => {
+    setCar(previousState => {
+      return { ...previousState, color: "blue" }
+    });
+  }
+_______________________________________________________________________________________  
+useEffect #####
+Hook allows you to perform side effects in your components.
+
+Some examples of side effects are: fetching data, directly updating the DOM, and timers.
+
+useEffect accepts two arguments. The second argument is optional.
+
+useEffect(<function>, <dependency>)
+useEffect runs on every render. That means that when the count changes,
+ a render happens, which then triggers another effect.
+ 
+useContext: Access shared state (context) in a component tree.
+useRef: Maintain references to DOM elements or mutable values that don't trigger re-renders.
+useReducer: Manage complex state logic, often when there are multiple sub-values or when state depends on previous state.
+useCallback: Memoize functions to avoid unnecessary re-creations on each render.
+useMemo: Memoize expensive values (like calculated data) to avoid unnecessary recalculations.
+useEffect: Perform side effects like data fetching, subscriptions, or manual DOM manipulations after rendering.
+
+
+
+
+extra:
+1)dom:
+The DOM is a programming interface for web documents. It represents the structure of a webpage in a tree-like format,
+where each node corresponds to an element on the page, such as an HTML tag, attribute, or text content.
+
+Key Points:
+What is it?
+The DOM is a live representation of the webpage. It is the browser’s in-memory structure that reflects the HTML document.
+
+
+How it works:
+When a browser loads a webpage, it parses the HTML, creates the DOM, and uses it to display the page. 
+Any changes made to the DOM (like user interactions or updates via JavaScript) 
+immediately reflect on the webpage, and the browser re-renders to show the updated content.
+2)axios
