@@ -1,0 +1,124 @@
+types of algorithm
+1]Sorting Algorithms: These algorithms arrange elements in a particular order (e.g., ascending or descending).
+ex:-Bubble Sor,Merge Sort,Quick Sort,Insertion Sort,Heap Sort
+
+2]Searching Algorithms: These algorithms are used to find an element within a data structure.
+ex:-Linear Search,Binary Search ,Depth-First Search (DFS), Breadth-First Search (BFS)
+
+3]Dynamic Programming Algorithms: These algorithms solve complex problems by breaking them down into simpler subproblems 
+and storing the solutions to subproblems to avoid redundant computations.
+Fibonacci Sequence,Knapsack Problem,Longest Common Subsequence (LCS),
+Matrix Chain Multiplication,Edit Distance (Levenshtein Distance),Coin Change Problem algo:).
+
+4]Greedy Algorithms: These algorithms make locally optimal choices at each step with the hope of finding a global optimum. 
+Dijkstra's Algorithm (for shortest path),Prim's Algorithm (for minimum spanning tree),Kruskal's Algorithm (for minimum spanning tree)
+
+5]Divide and Conquer Algorithms: These algorithms solve a problem by dividing it into smaller subproblems, 
+solving each subproblem recursively, and combining their solutions. 
+Merge Sort,Quick Sort,Binary Search
+
+6]Backtracking Algorithms: These algorithms incrementally build candidates to the solution and abandon a candidate as soon 
+as it is determined that it cannot lead to a valid solution. 
+These solve problems by trying out various possibilities and discarding those that do not meet the conditions.
+N-Queens Problem,Sudoku Solver,Hamiltonian Path
+
+7]Branch and Bound Algorithms: These algorithms are used for optimization problems and systematically explore the solution
+ space by dividing it into smaller subproblems and bounding their solutions. 
+Traveling Salesman Problem (TSP)
+
+8}Hashing Algorithms: These algorithms map data to fixed-size values (hashes) to enable efficient data retrieval. 
+MD5 (Message Digest Algorithm),SHA (Secure Hash Algorithms),Hash Tables
+
+9}Graph Algorithms: These algorithms are used to solve problems related to graphs (networks of nodes and edges). 
+ Dijkstra's Algorithm for shortest path,Floyd-Warshall Algorithm (for all-pairs shortest paths),A* Algorithm (for pathfinding),
+ Depth-First Search
+ 
+10]String Algorithms: These algorithms handle problems related to string processing and manipulation. Examples include:
+KMP (Knuth-Morris-Pratt) Pattern Matching,Rabin-Karp Algorithm,Boyer-Moore Algorithm
+
+________________________________________________________________________________________________________________
+Details:---
+
+Bubble Sort: Repeatedly swaps adjacent elements if they are in the wrong order.
+
+Merge Sort: Divides the array into halves, sorts them, and then merges the sorted halves.
+
+Quick Sort: Selects a pivot and partitions the array into elements less than and greater than the pivot.
+
+Selection Sort: Selects the smallest (or largest) element from the unsorted part and swaps it with the first unsorted element.
+
+Insertion Sort: Builds the sorted array one element at a time by inserting each element into its correct position.
+
+Binary Search: Searches a sorted array by repeatedly dividing the search interval in half.
+
+Linear Search: Searches each element in the array until the desired element is found or the array ends.
+
+Fibonacci Sequence: Generates numbers by adding the two preceding ones, starting from 0 and 1.
+
+Knapsack Problem: Optimizes the total value in a knapsack without exceeding its capacity.
+
+Breadth-First Search (BFS): Explores all nodes at the present depth level before moving on to the nodes at the next depth level.
+
+Depth-First Search (DFS): Explores as far as possible along each branch before backtracking.
+
+Knapsack Problem (Dynamic Programming): Solves the knapsack problem using a table to store solutions of subproblems.
+
+Bellman-Ford Algorithm: Computes shortest paths from a single source vertex to all other vertices in a weighted graph.
+
+Floyd-Warshall Algorithm: Finds shortest paths between all pairs of vertices in a weighted graph.
+
+Traveling Salesman Problem (TSP) using Held-Karp Algorithm: Solves TSP by considering all subsets of nodes and using dynamic programming.
+
+Prim's Algorithm: Finds the minimum spanning tree by adding the lowest-weight edge from the set of nodes already included.
+
+Kruskal's Algorithm: Finds the minimum spanning tree by sorting all edges and adding them one by one while avoiding cycles.
+
+Heap Sort: Converts the array into a heap, then repeatedly extracts the maximum element to build the sorted array.
+
+KMP Algorithm: Searches for occurrences of a word within a text using the prefix function to avoid unnecessary comparisons.
+
+Topological Sort (using DFS): Orders the vertices in a directed acyclic graph such that for every directed edge uv, vertex u comes before v.
+
+Radix Sort: Sorts numbers by processing individual digits.
+
+Counting Sort: Counts the occurrences of each element and places the elements in sorted order.
+
+Bucket Sort: Divides elements into buckets and sorts each bucket individually.
+
+Shell Sort: Sorts elements at a specific interval, reducing the interval and sorting until the interval is 1.
+
+Pigeonhole Sort: Places elements in buckets based on their key values.
+
+Cycle Sort: Finds cycles in the permutation of elements and rotates them into the correct position.
+
+Cocktail Shaker Sort: Similar to Bubble Sort but traverses the list in both directions alternately.
+
+Comb Sort: Improves Bubble Sort by using a gap larger than 1 for swapping elements initially.
+
+Strand Sort: Extracts sublists of sorted elements and merges them.
+
+Gnome Sort: Iteratively compares the current element with the previous one and swaps if necessary.
+
+Pancake Sort: Sorts a list by repeatedly flipping the largest unsorted pancake to the top and then to its correct position.
+
+Bitonic Sort: Sorts by recursively sorting two halves in ascending and descending order, then merging them.
+
+Bogo Sort: Randomly shuffles the list until it is sorted.
+
+Stooge Sort: Recursively sorts by sorting the first two-thirds, the last two-thirds, and then the first two-thirds again.
+
+Cocktail Sort: Extends Bubble Sort by traversing the list in both directions alternately.
+
+Gale-Shapley Algorithm: Solves the stable matching problem to find a stable match between two sets.
+
+Ford-Fulkerson Algorithm: Computes the maximum flow in a flow network.
+
+Edmonds-Karp Algorithm: Implementation of Ford-Fulkerson using BFS for finding augmenting paths.
+
+Hopcroft-Karp Algorithm: Finds maximum matching in bipartite graphs.
+
+Hungarian Algorithm: Finds the optimal assignment in a weighted bipartite graph.
+
+
+
+
