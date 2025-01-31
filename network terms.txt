@@ -1,0 +1,141 @@
+1)network #
+collection  of computer device.
+type:
+lan - for ofc & college , 0 to 100 meter
+man- 1 to 100 km ex-cable tv
+wan- worldwide
+vpn -virtual nw.by using vpn employee can access compny data through their local nw
+_____________________________________________________________________________________________________
+
+2)port #
+logical channel used to send and receive  data. 0 to 65,535 ports avaialbe.
+ “netstat -a” in the command prompt
+
+Port 80: HTTP (Web Traffic)
+Port 443: HTTPS (Secure Web Traffic)
+Port 22: SSH (Secure Shell)
+Port 21: FTP (File Transfer Protocol)
+Port 25: SMTP (Email Sending)
+Port 3306: MySQL Database
+Port 5432: PostgreSQL Database
+Port 8443: Often used as an alternative to port 443 for secure web traffic, especially in testing environments.
+Port 3000, 4000, 5000: Commonly used in local development environments for web applications built with frameworks like Node.js, Flask, and others.
+Port 3000: Often used for Node.jsapplications and React development servers.
+Port 4200: Commonly used for Angular development servers.
+Port 5000: Default port for Flask applications (Python web framework).
+Port 8000: Frequently used for Django applications (Python web framework).
+Port 8080: Widely used for general web development, including testing proxy servers and alternative HTTP servers.(alt for port-80)
+Port 8888: Typically used for Jupyter Notebooks.
+_____________________________________________________________________________________________________
+
+3)protocol- set of rules for data trnasmisoion on n/w
+topology-physical /logical arrangemament of n/w  ex -bus/star
+
+_____________________________________________________________________________________________________
+4)firewall - security used to monitor nw traffic ,protect nw  from unauthorised access.
+_____________________________________________________________________________________________________
+5)browser - software which display info to client
+_____________________________________________________________________________________________________
+6)client -
+The client is the device or application that initiates a request to the server.
+Web browsers , mobile apps, desktop applications.
+_____________________________________________________________________________________________________
+7)server - #
+takes request and search data and proviode data to client 
+Manages and stores data, processes client requests, and serves resources like web pages, files, or application data. 
+Apache, Nginx (web servers), MySQL, 
+
+by using xammpp ( dnld ,run and start apache ,mysql)we can convert own machine into local server.
+in local server data is accesible only for me.
+youtube is global server.
+
+mail server - send and receive mail
+file server - store file
+proxy sever - it hides user ip and assign new ip and proceed request
+IIS SERVER -microsoft server for host website ,file transfer
+linux server -open source , better security 
+
+server down -too mnay request from many user ,power failure 
+
+commnad-
+ipconfig
+netstat
+
+process-
+
+When you visit a website:
+Your browser (client) sends an HTTP request to the web server.typically using a protocol like HTTP or HTTPS.
+The web server processes the request, possibly querying a database for information.or fetching resources.
+The web server sends the requested web page/data or resources back to your browser as an HTTP response.
+_____________________________________________________________________________________________________
+8) cloud server -#
+global netwoek of remote server 
+ex ibm cloud , microsoft azure,aws
+
+provide comp resources like storage , database ,security ,network etc
+
+using cloud , user ,copmanies not need to manage physcial server or run app on own machine.cost effective
+we can acess app from any device anbywhere like instagram
+gives  on-demand availability of computer system resources like db and softwares,data storage.
+users and companies do not have to manage physical servers themselves or
+ run software applications on their own machines.
+
+benfit -removes some IT costs  (no need physical servers)
+emp can acess data from anywhere , compniews have more brrnches
+
+type -saas ,paas
+_____________________________________________________________________________________________________
+9)http ,https,ssl# 
+http -protocol used to access the data on the World Wide Web (www).
+ used to transfer the data .HTTP protocol does not provide the security of the data.
+https - mpore secure. uses ssl which encrypte data before transamission
+for  bank account details input
+SSL CERTIFICATE encrypts the data which the client transmits to the server.
+
+_____________________________________________________________________________________________________
+15)ftp
+for transmitting the files/web page files from one host to another.
+also used for downloading the files
+ftp servr#######
+The computer which uses FTP to transfer data is called the FTP server. It stores and shares client data.
+
+_____________________________________________________________________________________________________
+10)host ,hostname#
+host -computr where info /data,webpage is stored.
+
+each device in nw have unique name. 
+in pc , can be given by properties -comp name -change setting 
+cmd - hostname
+
+11)dns dhcp-
+dns - convert url/domain name to ip  and viceversa.
+ runs on port 53
+ 
+dhcp - assign manually ip add to all device.
+easy to add new computers, tablets, or smartphones – admin no longer have to configure every device manually, since the DHCP server does the job.
+also determines how long an IP address is valid.
+ port -67 and 68
+
+
+13)ip
+ Every device that connects to the Internet has an IP address. An IP address is a series of alphanumeric characters, 
+ The main task of IP is to deliver the packets from source to the destination
+ After IPv4, IPv6 came 
+ "ipconfig" on the command prompt.
+ IPv6 is the next generation of IP addresses. The main difference between IPv4 and IPv6 is the address size of IP addresses. The IPv4 is a 32-bit address, whereas IPv6 is a 128-bit hexadecimal address. IPv6 provides a large address space, and it contains a simple header as compared to IPv4.
+ 
+14)mac
+ like a serial number. Unlike IP addresses, MAC addresses do not change.
+ MAC addresses are not part of Internet traffic. They are only used inside a given network.
+
+
+Active Directory (AD) is a database and set of services that connect users with the network resources they need to get their work done.
+
+
+RARP: RARP stands for Reverse Address Resolution Protocol. As the name suggests, it provides the IP address of the device given a physical address as input. But RARP has become obsolete since the time DHCP has come into the picture
+
+ARP: ARP stands for Address Resolution Protocol. It is used to convert an IP address to its corresponding physical address(i.e., MAC Address). ARP is used by the Data Link Layer to identify the MAC address of the Receiver’s machine. 
+
+Socket: The unique combination of IP address and Port number together is termed a Socket. 
+Cloud Networks: Cloud Networks can be visualized with a Wide Area Network (WAN) as they can be hosted on public or private cloud service providers and cloud networks are available if there is a demand. Cloud Networks consist of Virtual Routers, Firewalls, etc.
+
