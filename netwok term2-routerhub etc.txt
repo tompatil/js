@@ -1,0 +1,83 @@
+11)dns dhcp-# imp
+dns - convert url/domain name to ip  and viceversa.
+translates the domain name into IP addresses. 
+ runs on port 53
+ 
+dhcp - assign manually ip add to all device.
+easy to add new computers, tablets, or smartphones – administrators no longer have to configure every device manually, since the DHCP server does the job.
+also determines how long an IP address is valid.
+ 67 and 68
+
+12) nw device# imp
+wifi 
+ethernet-
+isp -
+modem- 
+router -  device that connects multiple nw and sends data between them.
+provice instrrnet to LAN
+router###
+The router is a physical or virtual internetworking device that is designed to receive, analyze, and forward data packets between computer networks. A router examines a destination IP address of a given data packet, and it uses the headers and forwarding tables to decide the best way to transfer the packets. There are some popular companies that develop routers; such are Cisco, 3Com, HP, Juniper, D-Link, Nortel, etc. Some important points of routers are given below:
+
+A router is used in LAN (Local Area Network) and WAN (Wide Area Network) environments. For example, it is used in offices for connectivity, and you can also establish the connection between distant networks such as from Bhopal to
+It shares information with other routers in networking.
+It uses the routing protocol to transfer the data across a network.
+Furthermore, it is more expensive than other networking devices like switches and 	
+
+A router works on the third layer of the OSI model, and it is based on the IP address of a computer. It uses protocols such as ICMP to communicate between two or more networks. It is also known as an intelligent device as it can calculate the best route to pass the network packets from source to the destination automatically.
+
+#hub
+ A hub is a device to which all devices sharing a physical network can be a physically connected to form a Local Area Network or LAN. Hubs do little more than enable the electrical currents from a computer sending a packet to pass to all other devices connected to it.
+
+13)ip
+ Every device that connects to the Internet has an IP address. An IP address is a series of alphanumeric characters, 
+ The main task of IP is to deliver the packets from source to the destination
+ After IPv4, IPv6 came 
+ "ipconfig" on the command prompt.
+ IPv6 is the next generation of IP addresses. The main difference between IPv4 and IPv6 is the address size of IP addresses. The IPv4 is a 32-bit address, whereas IPv6 is a 128-bit hexadecimal address. IPv6 provides a large address space, and it contains a simple header as compared to IPv4.
+ 
+ 14)mac
+ like a serial number. Unlike IP addresses, MAC addresses do not change.
+ MAC addresses are not part of Internet traffic. They are only used inside a given network.
+ 
+
+16)The address resolution protocol (ARP)############
+
+
+
+17)ad ###########
+
+Active Directory (AD) is a database and set of services that connect users with the network resources they need to get their work done.
+
+
+18)
+cloud
+
+4 services /service model
+ 
+
+Software-as-a-Service (SaaS): Instead of users installing an application on their device, SaaS applications are hosted on cloud servers, and users access them over the Internet. SaaS is like renting a house: the landlord maintains the house, but the tenant mostly gets to use it as if they owned it. Examples of SaaS applications include Salesforce, MailChimp, and Slack.
+
+Platform-as-a-Service (PaaS): In this model, companies don't pay for hosted applications; instead they pay for the things they need to build their own applications. PaaS vendors offer everything necessary for building an application, including development tools, infrastructure, and operating systems, over the Internet. PaaS can be compared to renting all the tools and equipment necessary for building a house, instead of renting the house itself. PaaS examples include Heroku and Microsoft Azure.
+
+Infrastructure-as-a-Service (IaaS): In this model, a company rents the servers and storage they need from a cloud provider. They then use that cloud infrastructure to build their applications. IaaS is like a company leasing a plot of land on which they can build whatever they want — but they need to provide their own building equipment and materials. IaaS providers include DigitalOcean, Google Compute Engine, and OpenStack.
+
+Formerly, SaaS, PaaS, and IaaS were the three main models of cloud computing, and essentially all cloud services fit into one of these categories. However, in recent years a fourth model has emerged:
+
+Function-as-a-Service (FaaS): FaaS, also known as serverless computing, breaks cloud applications down into even smaller components that only run when they are needed. Imagine if it were possible to rent a house one little bit at a time: for instance, the tenant only pays for the dining room at dinner time, the bedroom while they are sleeping, the living room while they are watching TV, and when they are not using those rooms, they don't have to pay rent on them.
+
+FaaS or serverless applications still run on servers, as do all these models of cloud computing. But they are called "serverless" because they do not run on dedicated machines, and because the companies building the applications do not have to manage any servers.
+19)
+tcp######
+
+TCP stands for Transmission Control Protocol. It is a transport layer protocol that facilitates the transmission of packets from source to destination. It is a connection-oriented protocol that means it establishes the connection prior to the communication that occurs between the computing devices in a network. This protocol is used with an IP protocol, so together, they are referred to as a TCP/IP.
+
+
+RARP: RARP stands for Reverse Address Resolution Protocol. As the name suggests, it provides the IP address of the device given a physical address as input. But RARP has become obsolete since the time DHCP has come into the picture
+
+ARP: ARP stands for Address Resolution Protocol. It is used to convert an IP address to its corresponding physical address(i.e., MAC Address). ARP is used by the Data Link Layer to identify the MAC address of the Receiver’s machine. 
+
+Socket: The unique combination of IP address and Port number together is termed a Socket. 
+Cloud Networks: Cloud Networks can be visualized with a Wide Area Network (WAN) as they can be hosted on public or private cloud service providers and cloud networks are available if there is a demand. Cloud Networks consist of Virtual Routers, Firewalls, etc.
+
+Network: A network is a collection of computers and devices that are connected together to enable communication and data exchange.
+Nodes: Nodes are devices that are connected to a network. These can include computers, Servers, Printers, Routers, Switches, and other devices.
