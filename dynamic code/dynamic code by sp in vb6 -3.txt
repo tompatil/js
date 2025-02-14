@@ -1,0 +1,110 @@
+Option Explicit
+Dim StrSql As String
+Dim L As Integer
+Dim rs As New ADODB.Recordset
+
+Dim sql
+
+
+Private Sub Command4_Click() 'working
+Dim STRCD As String
+Dim resultSets() As ADODB.Recordset ' Array to hold result sets temporarily
+Dim tempRs As New ADODB.Recordset
+Dim strerrormsg, strexit As String
+Dim strEOF As String
+Dim rscount1 As Long
+STRCD = "B00200"
+Set tempRs = Nothing
+tempRs.CursorLocation = adUseClient
+tempRs.Open "select * from rsvaliation", CnDB1, adOpenDynamic, adLockOptimistic
+
+Set rs = Nothing
+rs.CursorLocation = adUseClient
+rs.Open "CALL SP_TEST('" & STRCD & "')", CnDB1, adOpenDynamic, adLockOptimistic 'add all checks/queires in sp.
+'add all queris/check in sp
+
+'rscount1 = 0
+'Do While rs.EOF
+'rscount1 = rscount1 + 1
+'rs.MoveNext
+'  Set rs = rs.NextRecordset
+'Loop
+
+Do While Not tempRs Is Nothing  ' Loop through all result sets
+   If tempRs.EOF = True Then Exit Do
+       strerrormsg = tempRs!msg
+       strexit = tempRs!Exit
+       strEOF = tempRs!EOF
+    
+       If strEOF = "FALSE" Then
+           If rs.RecordCount > 0 Then
+               MsgBox strerrormsg & " FOR CDNO:" & STRCD
+           End If
+       Else
+           If rs.RecordCount = 0 Then
+               MsgBox strerrormsg & " FOR CDNO :" & STRCD
+           End If
+       End If
+       
+       If strexit = "Y" Then
+           Exit Sub
+       End If
+       tempRs.MoveNext
+    Set rs = rs.NextRecordset    ' Move to the next query
+Loop
+
+CnDB1.Close
+Set rs = Nothing
+Set CnDB1 = Nothing
+End Sub
+
+Private Sub Command5_Click() 'view button
+
+Dim str As String
+str = "B00200"
+
+Dim rs As New ADODB.Recordset
+ Set rs = Nothing
+rs.CursorLocation = adUseClient
+
+
+rs.Open "CALL SP_TEST('" & str & "')", CnDB1, adOpenDynamic, adLockOptimistic 'add all checks/queires in sp.
+
+' Handle results from SP_TEST1
+If Not rs.EOF Then
+    MsgBox "Count from SP_TEST1 (renametest): " & rs.RecordCount
+End If
+
+' Move to the next result set if available
+If Not rs.NextRecordset Is Nothing Then
+    Set rs = rs.NextRecordset
+    If Not rs.EOF Then
+        MsgBox "Count from SP_TEST2: " & rs.RecordCount
+    End If
+End If
+
+' Close the recordset
+rs.Close
+
+MsgBox rs.RecordCount
+
+'count of queries:
+'--------
+'resultSetCount = 0
+'Do While Not rs Is Nothing
+'    ' Store the current result set
+'    If rs.EOF = True Then
+'        Exit Do
+'    End If
+'    ReDim Preserve resultSets(resultSetCount)
+'    Set resultSets(resultSetCount) = rs.Clone
+'
+'    resultSetCount = resultSetCount + 1
+'    Set rs = rs.NextRecordset
+'Loop
+''
+'MsgBox "Total Result Sets: " & resultSetCount
+
+'===================
+
+End Sub

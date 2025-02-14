@@ -1,0 +1,35 @@
+    
+Do While Not RSGROUP1.EOF
+  wSheet1.Cells(1, Inti1) = RSGROUP1!Header
+    RSGROUP1.MoveNext
+    Inti1 = Inti1 + 1
+Loop
+RSGROUP1.MoveFirst
+  
+ 'header''''''''''''''''''
+ 
+Int_Row = 1
+Int_c = 1
+       
+Do While Not Rsprime.EOF
+     STRFIELDVALUE = ""
+     wSheet1.Cells.Select
+     objExcel1.Selection.NumberFormat = "@"
+     wSheet1.Range("C" & Int_Row + 1).Select
+        
+     STR1 = RSGROUP1!FIELDNAME
+     STR2 = RSGROUP1!PHASE
+     
+    If STR2 = "PARTY" Then
+       STRFIELDVALUE = Rsprime.Fields(STR1).Value
+    ElseIf STR2 = "LEGAL" Then
+       STRFIELDVALUE = RsLegal.Fields(STR1).Value
+    ElseIf STR2 = "DOCDEFQC" Then
+       STRFIELDVALUE = RsDocDefQC.Fields(STR1).Value
+    End If
+    
+    wSheet1.Cells(Int_Row + 1, Int_c) = STRFIELDVALUE
+    RSGROUP1.MoveNext
+    
+    Int_c = Int_c + 1
+Loop

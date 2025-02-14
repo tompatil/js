@@ -1,0 +1,44 @@
+using System;
+using System.IO;
+using Newtonsoft.Json.Linq;  // Install the Newtonsoft.Json NuGet package for this
+using System.Data.OleDb;
+
+class Program
+{
+    static void Main()
+    {
+        string filePath = @"D:\excel\New.json";
+        string jsonString;
+
+        // Reading the JSON file
+        using (StreamReader sr = new StreamReader(filePath))
+        {
+            jsonString = sr.ReadToEnd();
+        }
+
+        // Parse the JSON
+        JObject json = JObject.Parse(jsonString);
+
+        // Database connection and insertion
+        using (OleDbConnection connection = new OleDbConnection("Your_Connection_String"))
+        {
+            connection.Open();
+
+            foreach (var doc in json["Documents"])
+            {
+                foreach (var idx in doc["Indexes"])
+                {
+                    string sql = "INSERT INTO student (first_name, last_name) VALUES ('" +
+                                 idx["ID"] + "', '" + idx["Value"] + "')";
+
+                    using (OleDbCommand cmd = new OleDbCommand(sql, connection))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        Console.WriteLine("Inserted");
+    }
+}

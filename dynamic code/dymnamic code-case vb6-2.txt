@@ -1,0 +1,38 @@
+Private Sub Command1_Click()
+ Dim errorMessage As String
+    
+Dim projectNumber, i As Integer
+Dim a() As String
+rs='select srno,desscription from vlatable where flag ='y'
+a = Split("1;2", ";") 'srno(rs(0))
+Do While UBound(a)
+projectNumber = a(i)
+
+
+
+    Select Case projectNumber
+        Case 1
+            ' Check if Name field is empty
+            If Trim(txtName.Text) = "" Then
+                errorMessage = "Name cannot be empty."
+            End If
+        Case 2
+            ' Check if Age field is numeric
+            If Not IsNumeric(txtAge.Text) Then
+                errorMessage = "Age must be a numeric value."
+            End If
+        Case 3
+            ' Example: Combined condition for demonstration
+            If Trim(txtName.Text) = "" Or Not IsNumeric(txtAge.Text) Then
+                errorMessage = "Name cannot be empty and Age must be numeric."
+            End If
+        
+        ' Add more cases if needed
+        Case Else
+            errorMessage = "Invalid project number."
+    End Select
+    i = i + 1
+ Loop
+End Sub
+
+s

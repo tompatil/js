@@ -1,0 +1,118 @@
+Option Explicit
+Dim StrSql As String
+Dim L As Integer
+Dim rs As New ADODB.Recordset
+Dim Json As Object
+Dim JsonString As String
+Dim filePath As String
+Dim item As Variant
+
+Private Sub Command1_Click()  'add button
+
+filePath = "D:\excel\sample.json" ' ex.:{""students"":[{""key1"":""John"",""key2"":""Doe""},{""key1"":""Jane"",""key2"":""Smith""}]}")
+Open filePath For Input As #1
+    JsonString = Input$(LOF(1), 1)
+Close #1
+Set Json = JsonConverter.ParseJson(JsonString)
+
+If IsObject(Json) Then
+    If TypeName(Json) = "Dictionary" Then
+        For Each Key In Json.Keys
+            Debug.Print Key & ": " & Json(Key)
+        Next Key
+    End If
+Else
+    Debug.Print "Error: Parsed data is not an object."
+End If
+For Each item In Json("students")
+    Dim sql As String
+    sql = "INSERT INTO student (first_name, last_name) VALUES ('" & item("id") & "', '" & item("val") & "')"
+
+    CnDB1.Execute sql
+    
+Next item
+
+MsgBox "inserted"
+CnDB1.Close
+Set CnDB1 = Nothing
+End Sub
+
+
+Private Sub Command2_Click() 'update button
+Dim Json As Object
+'Set Json = JsonConverter.ParseJson("{""a"":123,""b"":[1,2,3,4],""c"":{""d"":456}}")
+Set Json = JsonConverter.ParseJson("{""students"":[{""key1"":""John"",""key2"":""Doe""},{""key1"":""Jane"",""key2"":""Smith""}]}")
+
+Debug.Print JsonConverter.ConvertToJson(Json, Whitespace:=2) 'beautify json
+' -> "{
+'       "a": 123,
+'       "b": [
+'         1,
+'         2,
+'         3,
+'         4
+'       ],
+'       "c": {
+'         "d": 456,
+'         "e": 789
+'       }
+'     }"
+
+End Sub
+
+Private Sub Command3_Click() 'complex json insert
+
+Dim doc As Variant
+Dim idx As Variant
+
+filePath = "D:\excel\New.json"
+Open filePath For Input As #1
+    JsonString = Input$(LOF(1), 1)
+Close #1
+
+Set Json = JsonConverter.ParseJson(JsonString)
+
+For Each doc In Json("Documents")
+    For Each idx In doc("Indexes")
+        Dim sql As String
+       
+        sql = "INSERT INTO student (first_name, party1) VALUES ('" & idx("ID") & "', '" & idx("Value") & "')"
+        CnDB1.Execute sql
+    Next idx
+Next doc
+
+MsgBox "inserted"
+CnDB1.Close
+Set CnDB1 = Nothing
+End Sub
+
+Private Sub Command4_Click() 'r&d
+Dim doc As Variant
+Dim idx As Variant
+Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+filePath = "D:\excel\New.json"
+Open filePath For Input As #1
+    JsonString = Input$(LOF(1), 1)
+Close #1
+
+Set Json = JsonConverter.ParseJson(JsonString)
+For Each doc In Json("Documents")
+    For Each idx In doc("Indexes")
+        Dim sql As String
+       
+        sql = "INSERT INTO student (first_name, party1) VALUES ('" & doc("ID") & "', '" & idx("Value") & "')"
+        CnDB1.Execute sql
+    Next idx
+Next doc
+
+MsgBox "inserted"
+CnDB1.Close
+Set CnDB1 = Nothing
+End Sub
+
+Private Sub Form_Load()
+
+Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+
+
+End Sub

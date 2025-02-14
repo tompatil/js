@@ -1,0 +1,13 @@
+myValues(0) = "qq"
+myValues(1) = "ee"
+myValues(2) = "gr"
+myValues(3) = "gr"
+' Constructing the SQL query
+sql = "INSERT INTO your_table (your_column) VALUES "
+
+For i = LBound(myValues) To UBound(myValues)
+    sql = sql & "('" & Replace(myValues(i), "'", "''") & "')"  ' Replace single quote with two single quotes to escape it
+    If i < UBound(myValues) Then
+        sql = sql & ","
+    End If
+Next i

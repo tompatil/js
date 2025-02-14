@@ -1,0 +1,59 @@
+Private Sub Command1_Click()
+myfun
+End Sub
+
+Private Sub Form_Load()
+G_FileServerIp = "172.20.3.231"
+
+G_FileserverDBName = "TEST_AKSHAY"
+G_FileserverDBUser = Module1.fOSMachineName
+G_FileserverDBPwd = "mysqldbvp"
+G_FileServerIp = "mysqldbvp"
+
+
+Call Connect1
+'Call ConnectTest
+End Sub
+Private Sub myfun()
+Dim conn As Object
+Dim rs As Object
+Dim cmd As Object
+Dim inputText As String
+Dim ctrl As Control
+    
+For Each ctrl In Me.Controls
+    If TypeOf ctrl Is TextBox Then
+        inputText = ctrl.Text
+    End If
+Next ctrl
+
+' inputText=rs!ctrl 'or take controller name from table
+
+Set cmd = CreateObject("ADODB.Command")
+
+cmd.ActiveConnection = cn
+cmd.CommandText = "CheckIfNotEmpty" ' Stored procedure name
+cmd.CommandType = 4 ' Stored procedure type
+
+cmd.Parameters.Append cmd.CreateParameter("@inputText", 8, 1, 255, inputText) ' 8 = adVarChar
+
+Set rs = cmd.Execute
+
+If Not rs.EOF Then
+    MsgBox rs.Fields("Status").Value
+End If
+
+rs.Close
+Set rs = Nothing
+Set cmd = Nothing
+
+End Sub
+'store proceure:
+'CREATE PROCEDURE CheckIfNotEmpty(IN inputText VARCHAR(255))
+'BEGIN
+'    IF inputText = '' THEN
+'        SELECT 'Textbox is empty' AS Status;
+'    Else
+'        SELECT 'Textbox is not empty' AS Status;
+'    END IF;
+'END;

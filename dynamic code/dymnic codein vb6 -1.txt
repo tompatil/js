@@ -1,0 +1,229 @@
+Option Explicit
+Dim rs As ADODB.Recordset
+    Dim rowIndex As Long
+    Dim colIndex As Long
+Private Sub Combo1_Click()
+
+
+'rowIndex = DataGrid1.Row
+'colIndex = DataGrid1.Col
+
+rowIndex = 0
+colIndex = 3
+ DataGrid1.Row = rowIndex ' Move to the desired column
+DataGrid1.Col = colIndex
+
+  
+DataGrid1.Columns(colIndex).Value(rowIndex) = Combo1.Text
+DataGrid1.Text = Combo1.Text
+  
+
+End Sub
+
+Private Sub Command1_Click()
+Dim firstRowText As String
+Dim columnIndex As Integer
+
+' Assuming your DataGrid is named DataGrid1
+' Loop through each column in the first row (row index 0)
+For columnIndex = 0 To DataGrid1.Columns - 1
+    ' Get text from the first row and specified column
+    firstRowText = DataGrid1.TextMatrix(0, columnIndex)
+    
+    ' Display or process the text as needed
+    MsgBox "Text in Row 1, Column " & columnIndex + 1 & ": " & firstRowText
+Next columnIndex
+
+End Sub
+
+Private Sub Form_Load()
+Dim STRCON1  As Variant
+Dim i As Long
+Dim blmultiple As Boolean
+Dim blnValidate As Boolean
+ReDim STRCON1(0)
+Dim strCom() As String
+Dim I_1 As Long
+Dim J_1 As Long
+Dim rsval As New ADODB.Recordset
+Dim rsparty As New ADODB.Recordset
+Dim STRFILEDNAME, STRCONDTION, STRVALUE, stradd, strvd, strerrormsg As String
+Dim blnValidateForce As Boolean
+Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+
+Set rsval = Nothing
+Set rsparty = Nothing
+rsval.CursorLocation = adUseClient
+rsparty.CursorLocation = adUseClient
+
+rsval.Open "select * from pvalidation ", CnDB1, adOpenDynamic, adLockOptimistic
+
+rsparty.Open "select * from PARTIESTEST limit 1 ", CnDB1, adOpenDynamic, adLockOptimistic
+
+ 
+  
+Do While Not rsval.EOF
+    STRFILEDNAME = rsval!fieldname
+    STRCONDTION = rsval!condition
+    STRVALUE = rsval!value_fieldname & ""
+    strerrormsg = rsval!errormsg & ""
+    stradd = rsval!Add
+    strvd = rsval!Validate
+    
+  If InStr(rsval!id, ".") > 0 Then 'for multiple condition
+     
+    If STRCONDTION = "blank" Then
+      If rsparty(STRFILEDNAME) = "" Then
+          List1.AddItem "" & strerrormsg & ""
+           If strvd = "not force" Then
+              blnValidateForce = False
+           Else
+              blnValidate = False
+           End If
+           If stradd = "and" Then
+            blmultiple = True
+           End If
+      End If
+     End If
+     
+     If STRCONDTION = "not blank" Then
+        If rsparty(STRFILEDNAME) <> "" Then
+           List1.AddItem "" & strerrormsg & ""
+           If stradd = "and" Then
+              blmultiple = True
+           End If
+        End If
+     End If
+     
+     If STRCONDTION = "GREATER THAN" And blmultiple = True Then
+        If rsparty(STRFILEDNAME) > Val(STRVALUE) Then
+            List1.AddItem "" & strerrormsg & ""
+            If stradd = "and" Then
+              blmultiple = True
+             End If
+        End If
+     End If
+     
+     If STRCONDTION = "less than" And blmultiple = True Then
+        If rsparty(STRFILEDNAME) < Val(STRVALUE) Then
+           List1.AddItem "" & strerrormsg & ""
+           If stradd = "and" Then
+              blmultiple = True
+           End If
+        End If
+     End If
+        
+     If STRCONDTION = "equal to" And blmultiple = True Then
+        If rsparty(STRFILEDNAME) = Val(STRVALUE) Then
+             List1.AddItem "" & strerrormsg & ""
+             If stradd = "and" Then
+                blmultiple = True
+             End If
+        End If
+     End If
+     
+     If STRCONDTION = "includes" And InStr(STRVALUE, ";") > 0 Then
+        strCom = Split(Trim(STRVALUE & ""), ";")
+        For I_1 = 0 To UBound(strCom)
+            If InStr(rsparty(STRFILEDNAME), strCom(I_1)) Then
+                List1.AddItem "" & strerrormsg & ""
+            End If
+        Next
+     ElseIf STRCONDTION = "includes" Then
+        If InStr(rsparty(STRFILEDNAME), STRVALUE) Then
+             List1.AddItem "" & strerrormsg & ""
+        End If
+     End If
+ End If
+
+
+'---------------------------------------------------------------------------
+'for single condition'PENDING
+ If InStr(rsval!id, ".") = 0 Then
+    If STRCONDTION = "blank" Then
+      If rsparty(STRFILEDNAME) = "" Then
+           List1.AddItem "" & strerrormsg & ""
+           If strvd = "not force" Then
+              blnValidateForce = False
+           Else
+              blnValidate = False
+           End If
+          
+      End If
+     End If
+     
+     If STRCONDTION = "not blank" Then
+        If rsparty(STRFILEDNAME) <> "" Then
+           List1.AddItem "" & strerrormsg & ""
+           
+        End If
+     End If
+     
+     If STRCONDTION = "GREATER THAN" Then
+        If rsparty(STRFILEDNAME) > Val(STRVALUE) Then
+            List1.AddItem "" & strerrormsg & ""
+            
+        End If
+     End If
+     
+     If STRCONDTION = "less than" Then
+        If rsparty(STRFILEDNAME) < Val(STRVALUE) Then
+           List1.AddItem "" & strerrormsg & ""
+           
+        End If
+     End If
+        
+     If STRCONDTION = "equal to" Then
+        If rsparty(STRFILEDNAME) = Val(STRVALUE) Then
+             List1.AddItem "" & strerrormsg & ""
+             
+        End If
+     End If
+     
+     If STRCONDTION = "includes" And InStr(STRVALUE, ";") > 0 Then
+        strCom = Split(Trim(STRVALUE & ""), ";")
+        For I_1 = 0 To UBound(strCom)
+            If InStr(rsparty(STRFILEDNAME), strCom(I_1)) Then
+                List1.AddItem "" & strerrormsg & ""
+            End If
+        Next
+     ElseIf STRCONDTION = "includes" Then
+        If InStr(rsparty(STRFILEDNAME), STRVALUE) Then
+             List1.AddItem "" & strerrormsg & ""
+        End If
+     End If
+ End If
+
+ rsval.MoveNext
+Loop
+
+'master check 'InStr(rsval!remark, "MASTER_") = 0
+'If InStr(remark, ucase("master")) > 0 Then
+    'rs_Doctype.Open "select * from " & strremark & ", CnDB1, adOpenDynamic, a"
+    'rs_Doctype.Filter = "Doctype='" & Replace(Trim(rsparty!Doctype), "'", "''") & "'"
+    '    If rs_Doctype.EOF = True Then
+    '        List1.AddItem "Doctype not present in MASTER"
+    '
+    '    End If
+'End If
+    
+End Sub
+
+Private Sub DataGrid1_Click()
+
+
+    ' Get the current row and column index
+    rowIndex = DataGrid1.Row
+    colIndex = DataGrid1.Col
+
+'    ' Set the ComboBox position to the clicked cell
+'    Combo1.Top = DataGrid1.Top + DataGrid1.CellTop(rowIndex) + 1
+'    Combo1.Left = DataGrid1.Left + DataGrid1.CellLeft(colIndex) + 1
+'    Combo1.Width = DataGrid1.CellWidth(colIndex) - 2
+
+    ' Show the ComboBox and set focus
+    Combo1.Visible = True
+    Combo1.SetFocus
+End Sub
+
+

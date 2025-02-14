@@ -1,0 +1,153 @@
+Option Explicit
+Dim StrSql As String
+Dim L As Integer
+Dim rs As New ADODB.Recordset
+Dim Json As Object
+Dim JsonString As String
+Dim filePath As String
+Dim item As Variant
+
+
+
+Private Sub Command2_Click() 'update button
+Dim Json As Object
+'Set Json = JsonConverter.ParseJson("{""a"":123,""b"":[1,2,3,4],""c"":{""d"":456}}")
+Set Json = JsonConverter.ParseJson("{""students"":[{""key1"":""John"",""key2"":""Doe""},{""key1"":""Jane"",""key2"":""Smith""}]}")
+
+Debug.Print JsonConverter.ConvertToJson(Json, Whitespace:=2) 'beautify json
+' -> "{
+'       "a": 123,
+'       "b": [
+'         1,
+'         2,
+'         3,
+'         4
+'       ],
+'       "c": {
+'         "d": 456,
+'         "e": 789
+'       }
+'     }"
+
+End Sub
+
+Private Sub Command3_Click()
+Dim filePath As String
+    Dim JsonString As String
+    Dim Json As Object
+
+    ' Load JSON file
+    filePath = "D:\excel\New.json"
+    Open filePath For Input As #1
+        JsonString = Input$(LOF(1), 1)
+    Close #1
+
+    ' Parse JSON
+    Set Json = JsonConverter.ParseJson(JsonString)
+
+    ' Process and display the JSON structure in ListView
+    ProcessJsonNode1 Json
+
+    MsgBox "JSON structure displayed in ListView"
+End Sub
+
+Private Sub Command4_Click() 'r&d
+    Dim filePath As String
+    Dim JsonString As String
+    Dim Json As Object
+
+    ' Connect to the database
+    Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+
+    ' Load JSON file
+    filePath = "D:\excel\New.json"
+    Open filePath For Input As #1
+        JsonString = Input$(LOF(1), 1)
+    Close #1
+
+    ' Parse JSON
+    Set Json = JsonConverter.ParseJson(JsonString)
+
+    ' Process the JSON structure dynamically
+    ProcessJsonNode Json
+
+    MsgBox "Data inserted"
+    CnDB1.Close
+    Set CnDB1 = Nothing
+End Sub
+Private Sub ProcessJsonNode(ByVal node As Variant, Optional ByVal parentID As String = "")
+    Dim key As Variant
+    Dim subNode As Variant
+    Dim sql As String
+    Dim currentID As String
+
+
+If IsObject(node) Then
+    If TypeName(node) = "Collection" Then
+        For Each subNode In node ' Loop through each key in the object if it's a JSON object
+            ProcessJsonNode subNode, parentID  ' Recurse into collections
+        Next
+    Else
+       
+        currentID = IIf(node.Exists("ID"), node("ID"), parentID) ' Extract or generate an ID for the current node
+        
+        
+        For Each key In node ' Process each key-value pair
+            If IsObject(node(key)) Then
+               
+                ProcessJsonNode node(key), currentID ' Recursive call for nested objects
+            Else
+'               ListView1.ListItems.Add " & key & "
+'                ListView1.ListItems.Add " & node(key) & "
+                 Dim listItem As listItem
+                Set listItem = ListView1.ListItems.Add()
+                    listItem.Text = key                    ' Column 1: Key
+                    listItem.SubItems(1) = node(key)        ' Column 2: Value
+                'sql = "INSERT INTO student (first_name, party1) VALUES ('" & doc("ID") & "', '" & idx("Value") & "')"
+                sql = "INSERT INTO student ( first_name, party1) VALUES ( '" & key & "', '" & node(key) & "')"
+                CnDB1.Execute sql
+            End If
+        Next
+    End If
+End If
+End Sub
+
+Private Sub ProcessJsonNode1(ByVal node As Variant, Optional ByVal parentID As String = "")
+    Dim key As Variant
+    Dim subNode As Variant
+    Dim currentID As String
+    Dim listItem As listItem
+
+    ' Loop through each key in the object if it's a JSON object
+    If IsObject(node) Then
+        If TypeName(node) = "Collection" Then
+            For Each subNode In node ' Loop through each item in the collection
+                ProcessJsonNode subNode, parentID ' Recurse into collections
+            Next
+        Else
+            ' Extract or generate an ID for the current node
+            currentID = IIf(node.Exists("ID"), node("ID"), parentID)
+
+            ' Process each key-value pair
+            For Each key In node
+                If IsObject(node(key)) Then
+                    ' Recursive call for nested objects
+                    ProcessJsonNode node(key), currentID
+                Else
+                    ' Display the key and value in ListView1
+                    Set listItem = ListView1.ListItems.Add()
+                    listItem.Text = key                    ' Column 1: Key
+                    listItem.SubItems(1) = node(key)        ' Column 2: Value
+                End If
+            Next
+        End If
+    End If
+End Sub
+
+Private Sub Form_Load()
+
+Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+
+
+End Sub
+

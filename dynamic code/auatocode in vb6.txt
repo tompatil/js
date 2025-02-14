@@ -1,0 +1,182 @@
+Dim RSPARTY As New ADODB.Recordset
+Private Sub Command1_Click()
+'AUTOVALIDATION
+
+AUTOVALIDATION1
+End Sub
+
+
+
+Private Sub Command2_Click()
+Form2.Show
+End Sub
+
+Private Sub Form_Load()
+Combo1.AddItem "GELNAME"
+Combo1.AddItem "GEFNAME"
+'Combo2.AddItem "GRLNAME"
+'Combo2.AddItem "GRFNAME"
+  Combo3.AddItem "greater than"
+Combo3.AddItem "equal to"
+Combo3.AddItem "not equal to"
+Combo3.AddItem "includes"
+Call ConnectDB1("172.20.3.231", "mysqldbvp", "mysqldbvp", "TEST_AKSHAY")
+
+Combo2.AddItem "AND"
+Combo2.AddItem "OR"
+RSPARTY.CursorLocation = adUseClient
+
+RSPARTY.Open "select * from PARTIES_FINALQC ", CnDB1, adOpenDynamic, adLockOptimistic
+
+End Sub
+Public Sub AUTOVALIDATION1()
+Dim myValues(2) As String
+Dim myValues1(1) As String
+Dim myValues2(1) As String
+Dim myValues3(1) As String
+Dim myValues4(1) As String
+myValues(0) = Combo1.Text
+myValues1(0) = Text1.Text
+myValues(1) = Combo2.Text
+If Combo4.Text <> "" Then
+    myValues3(1) = Combo4.Text
+End If
+myValues4(1) = Combo3.Text
+Dim sql As String
+sql = "IF "
+
+For i = LBound(myValues) To UBound(myValues)
+    sql = sql & "InStr(RSPARTY(" & myValues(i) & ")) > 0"
+    If i < UBound(myValues) Then
+        sql = sql & " And "
+    End If
+Next i
+i = 0
+sql = sql & " THEN"
+Debug.Print sql
+
+
+
+End Sub
+' FOR FIXED SIZE
+Public Sub AUTOVALIDATION() ' FOR FIXED SIZE
+
+'FIELD1 = Combo1.Text
+'VALUE1 = Text1.Text
+'
+'FIELD2 = Combo2.Text
+'VALUE2 = Text2.Text
+'
+'If InStr(RSPARTY(FIELD1), VALUE1) > 0 And InStr(RSPARTY(FIELD2), VALUE2) > 0 Then
+'    List1.AddItem "CHECK FOR PUBLIC IN LASTNAME"
+'    If Check1.Value = 0 Then
+'         blnValidate = False
+'         blnValidateForce = False
+'     Else
+'         blnValidate = False
+'         'blnValidateForce = False
+'     End If
+'
+'End If
+'_______________________________________________________________
+
+
+Dim myValues(2) As String
+Dim myValues1(1) As String
+Dim myValues2(1) As String
+myValues(0) = Combo1.Text
+myValues1(0) = Text1.Text
+myValues(1) = Combo2.Text
+'myValues1(1) = Text2.Text
+
+Dim sql As String
+sql = "IF "
+
+For i = LBound(myValues) To UBound(myValues)
+    sql = sql & "InStr(RSPARTY(" & myValues(i) & ")) > 0"
+    If i < UBound(myValues) Then
+        sql = sql & " And "
+    End If
+Next i
+i = 0
+sql = sql & " THEN"
+Debug.Print sql
+
+'another cond
+myValues2(0) = "And"
+myValues2(1) = "or"
+'ReDim myValues(2)
+'myValues(2) = "grmname"
+sql = ""
+sql = "IF "
+For i = LBound(myValues) To UBound(myValues)
+    sql = sql & "InStr(RSPARTY(" & myValues(i) & ")) > 0"
+    If i < UBound(myValues) Then
+    
+        sql = sql & " " & myValues2(i) & " "
+    End If
+Next i
+i = 0
+sql = sql & " THEN"
+
+
+
+Debug.Print sql
+'fieldValue = rs_legal_sub.Fields(Str).Value
+
+'fieldValue = rs_legal_sub(Str)
+End Sub
+Private Sub Command3_Click()
+
+    Dim condition As String
+    Dim number As Integer
+    number = 10
+    condition = "number > 5"
+
+
+ Dim parts() As String
+    Dim leftPart As String
+    Dim operatorPart As String
+    Dim rightPart As Integer
+Dim ExecuteCondition As Boolean
+    ' Split the condition string by spaces
+    parts = Split(condition, " ")
+
+    If UBound(parts) <> 2 Then
+        MsgBox "Invalid condition format"
+        ExecuteCondition = False
+        
+    End If
+
+    ' Assign the parts
+    leftPart = parts(0)
+    operatorPart = parts(1)
+    rightPart = CInt(parts(2))
+
+    ' Evaluate the condition
+    If leftPart = "number" Then
+        Select Case operatorPart
+            Case ">"
+                ExecuteCondition = (number > rightPart)
+            Case "<"
+                ExecuteCondition = (number < rightPart)
+            Case "="
+                ExecuteCondition = (number = rightPart)
+                ' Add more operators as needed
+            Case Else
+                MsgBox "Invalid operator"
+                ExecuteCondition = False
+        End Select
+    Else
+        MsgBox "Invalid variable"
+        ExecuteCondition = False
+    End If
+
+   
+
+'    If ExecuteCondition(condition, number) Then
+'        MsgBox "Condition is True"
+'    Else
+'        MsgBox "Condition is False"
+'    End If
+End Sub
